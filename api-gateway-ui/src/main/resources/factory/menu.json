@@ -1,0 +1,44 @@
+{
+  "MAIN": {
+    "id": "1",
+    "command": "/page?name=index",
+    "menuItemDescription": "MAIN",
+    "role": "COMMON"
+  },
+  "ACCOUNT": {
+    "id": "2",
+    "command": "/command?name=account",
+    "menuItemDescription": "ACCOUNT",
+    "role": "CLIENT"
+  },
+  "LOG_IN": {
+    "id": "3",
+    "command": "/page?name=login",
+    "menuItemDescription": "LOG_IN",
+    "role": "ANYONE_NOT_LOGGED"
+  },
+  "SIGN_UP": {
+    "id": "4",
+    "command": "/page?name=signup",
+    "menuItemDescription": "SIGN_UP",
+    "role": "ANYONE_NOT_LOGGED"
+  },
+  "CLIENT_CABINET": {
+    "id": "3",
+    "command": "/command?name=clientcabinet",
+    "menuItemDescription": "CLIENT_CABINET",
+    "role": "CLIENT"
+  },
+  "ADMIN_CABINET": {
+    "id": "3",
+    "command": "/command?name=admincabinet",
+    "menuItemDescription": "ADMIN_CABINET",
+    "role": "ADMIN_LOGGED"
+  },
+  "LOGOUT": {
+    "id": "9",
+    "command": "/command?name=logout",
+    "menuItemDescription": "LOGOUT",
+    "role": "ANYONE_LOGGED"
+  }
+}

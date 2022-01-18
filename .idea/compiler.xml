@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="service-registry" />
+        <module name="request-order-service" />
+        <module name="payment-service" />
+        <module name="config-server" />
+        <module name="client-service" />
+        <module name="mailing-service" />
+        <module name="hotel-grodno-inn-microservices" />
+        <module name="common-user-service" />
+        <module name="api-gateway-ui" />
+        <module name="admin-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common-user-activity--service" target="11" />
+      <module name="hotel-grodno-inn-microservices" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="admin-service" options="-parameters" />
+      <module name="api-gateway-ui" options="-parameters" />
+      <module name="client-service" options="-parameters" />
+      <module name="common-user-activity--service" options="-parameters" />
+      <module name="common-user-service" options="-parameters" />
+      <module name="config-server" options="-parameters" />
+      <module name="mailing-service" options="-parameters" />
+      <module name="payment-service" options="-parameters" />
+      <module name="request-order-service" options="-parameters" />
+      <module name="service-registry" options="-parameters" />
+    </option>
+  </component>
+</project>
