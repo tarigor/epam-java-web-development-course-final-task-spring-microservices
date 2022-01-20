@@ -26,9 +26,7 @@
 			<link rel="stylesheet" href="css/style.css">
 			<div class="wrapper">
 				<div class="inner">
-					<form:form action="${pageContext.request.contextPath}/command?name=registrationProcessForm"
-					           modelAttribute="registration">
-						
+					<form:form action="${pageContext.request.contextPath}/command?name=registration" modelAttribute="registration">
 						<h3>Registration Form</h3>
 						<div class="form-group">
 							<div class="form-wrapper">

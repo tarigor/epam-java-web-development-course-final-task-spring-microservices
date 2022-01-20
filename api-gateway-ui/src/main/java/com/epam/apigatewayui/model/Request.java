@@ -1,20 +1,15 @@
-package com.epam.requestorderservice.entity;
+package com.epam.apigatewayui.model;
 
-import com.epam.requestorderservice.type.RequestOrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.sql.Date;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Requests {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class Request {
     private Integer requestId;
     private long clientId;
     private Integer personsAmount;

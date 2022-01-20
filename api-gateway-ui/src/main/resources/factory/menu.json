@@ -25,7 +25,7 @@
   },
   "CLIENT_CABINET": {
     "id": "3",
-    "command": "/command?name=clientcabinet",
+    "command": "/command?name=client-cabinet",
     "menuItemDescription": "CLIENT_CABINET",
     "role": "CLIENT"
   },

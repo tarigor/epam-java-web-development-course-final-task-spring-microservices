@@ -47,17 +47,17 @@
 			<tbody>
 			<c:forEach items="${clientRequests}" var="clientRequest">
 				<tr class=" text-center u-grey-10 u-opacity-85">
-					<th scope="col" style="text-align: center">${clientRequest.getRequestID()}</th>
-					<th scope="col" style="text-align: center">${clientRequest.getPersons()}</th>
-					<th scope="col" style="text-align: center">${clientRequest.getRoomClass()}</th>
-					<th scope="col" style="text-align: center">${clientRequest.getDateFrom()}</th>
-					<th scope="col" style="text-align: center">${clientRequest.getDateTo()}</th>
+					<th scope="col" style="text-align: center">${clientRequest.getRequest().getRequestId()}</th>
+					<th scope="col" style="text-align: center">${clientRequest.getRequest().getPersonsAmount()}</th>
+					<th scope="col" style="text-align: center">${clientRequest.getRequest().getRoomClass()}</th>
+					<th scope="col" style="text-align: center">${clientRequest.getRequest().getCheckInDate()}</th>
+					<th scope="col" style="text-align: center">${clientRequest.getRequest().getCheckOutDate()}</th>
 					<th scope="col" style="text-align: center"><f:message
-							key="${clientRequest.getRequestStatus().getDescription()}"
+							key="${clientRequest.getRequestStatusDescription()}"
 							bundle="${local}"/></th>
 					<th style="text-align: center">
 						<c:if test="${clientRequest.isProcessed()}">
-							<a href="<c:url value="${pageContext.request.contextPath}/command?name=cancel_request&requestID=${clientRequest.getRequestID()}"/>"
+							<a href="<c:url value="${pageContext.request.contextPath}/command?name=cancel_request&requestId=${clientRequest.getRequest().getRequestId()}"/>"
 							   class="btn btn-danger">
 								<f:message key="cancel" bundle="${local}"/>
 							</a>
@@ -87,24 +87,24 @@
 			<tbody>
 			<c:forEach items="${clientOrders}" var="clientOrder">
 				<tr class=" text-center u-grey-10 u-opacity-85">
-					<th scope="col" style="text-align: center">${clientOrder.getOrderID()}</th>
-					<th scope="col" style="text-align: center">${clientOrder.getRequestID()}</th>
-					<th scope="col" style="text-align: center">${clientOrder.getRoomID()}</th>
-					<th scope="col" style="text-align: center">${clientOrder.getRoomClass()}</th>
-					<th scope="col" style="text-align: center">${clientOrder.getCheckInDate()}</th>
-					<th scope="col" style="text-align: center">${clientOrder.getCheckOutDate()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getOrder().getOrderId()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getOrder().getRequestId()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getOrder().getRoomId()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getOrder().getRoomClass()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getOrder().getCheckInDate()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getOrder().getCheckOutDate()}</th>
 					<th scope="col" style="text-align: center"><f:message
-							key="${clientOrder.getOrderStatus().getDescription()}" bundle="${local}"/></th>
+							key="${clientOrder.getOrderStatusDescription()}" bundle="${local}"/></th>
 					<th style="text-align: center">
 						<a>
 							<c:if test="${clientOrder.isPaymentRequired()}">
 								<a href="<c:url value="${pageContext.request.contextPath}/command?name=invoice
-								&orderID=${clientOrder.getOrderID()}
-								&requestID=${clientOrder.getRequestID()}
-								&roomID=${clientOrder.getRoomID()}
-								&roomClass=${clientOrder.getRoomClass()}
-								&dateFrom=${clientOrder.getCheckInDate()}
-								&dateTo=${clientOrder.getCheckOutDate()}
+								&orderID=${clientOrder.getOrder().getOrderId()}
+								&requestID=${clientOrder.getOrder().getRequestId()}
+								&roomID=${clientOrder.getOrder().getRoomId()}
+								&roomClass=${clientOrder.getOrder().getRoomClass()}
+								&dateFrom=${clientOrder.getOrder().getCheckInDate()}
+								&dateTo=${clientOrder.getOrder().getCheckOutDate()}
 								"/>" class="btn btn-success">
 									<f:message key="client.cabinet.pay" bundle="${local}"/>
 								</a>

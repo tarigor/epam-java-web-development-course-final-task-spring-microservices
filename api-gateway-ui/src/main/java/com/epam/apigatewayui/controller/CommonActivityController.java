@@ -1,19 +1,22 @@
 package com.epam.apigatewayui.controller;
 
-import com.epam.apigatewayui.entity.User;
-import com.epam.apigatewayui.feignservice.CommonServiceFeignClient;
-import com.epam.apigatewayui.feignservice.CommonUserActivityServiceClient;
+import com.epam.apigatewayui.feignservice.CommonServiceFeignClientService;
+import com.epam.apigatewayui.model.User;
 import com.epam.apigatewayui.model.UserDataWhileLogin;
+import com.epam.apigatewayui.model.UserDataWhileRegistration;
+import com.epam.apigatewayui.service.IInputValidation;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Controller
@@ -21,11 +24,9 @@ import java.util.Objects;
 public class CommonActivityController extends BaseController {
 
     @Autowired
-    private CommonUserActivityServiceClient commonUserActivityServiceClient;
-
+    private CommonServiceFeignClientService commonUserActivityServiceClient;
     @Autowired
-    private CommonServiceFeignClient commonServiceFeignClient;
-
+    private IInputValidation inputValidation;
     @Autowired
     private Gson gson;
 
@@ -36,8 +37,9 @@ public class CommonActivityController extends BaseController {
 
     @GetMapping("/page")
     public String menuPageNavigate(@RequestParam(name = "name") String pageName, Model model) {
+        setAttributes();
         if (pageName.equals("signup")) {
-            model.addAttribute("registration", new UserDataWhileLogin());
+            model.addAttribute("registration", new UserDataWhileRegistration());
         }
         if (pageName.equals("login")) {
             model.addAttribute("login", new UserDataWhileLogin());
@@ -45,41 +47,79 @@ public class CommonActivityController extends BaseController {
         return openPage(pageName);
     }
 
-    @GetMapping("/login")
-    public String login(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "loginAndCompleteRequest", required = false) String loginAndCompleteRequest,
-            HttpServletRequest httpServletRequest,
-            Model model) {
+    @RequestMapping("/command")
+    public String doCommand(@RequestParam(name = "name") String commandName) {
 
-        UserDataWhileLogin userDataWhileLogin = new UserDataWhileLogin  (email, password);
+        log.info("the following command detected -> {}", commandName);
+        return "forward:/" + commandName;
+    }
+
+    @RequestMapping(value = "/login")
+    public String login(
+            @Valid @ModelAttribute("login") UserDataWhileLogin userDataWhileLogin,
+            @RequestParam(name = "loginAndCompleteRequest", required = false) String loginAndCompleteRequest,
+            BindingResult bindingResult, HttpServletRequest request, Model model) {
+
+        System.out.println("user -> " + userDataWhileLogin.toString());
         try {
-            String body = Objects.requireNonNull(commonUserActivityServiceClient.getUserWithHttpStatusCode(userDataWhileLogin).getBody()).toString();
+            String body = Objects.requireNonNull(commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin).getBody()).toString();
             User user = gson.fromJson(body, User.class);
-            httpServletRequest.getSession().setAttribute("user", user);
-            return "redirect:/clientcabinet";
+            request.getSession().setAttribute("user", user);
+            return "redirect:/client-cabinet";
         } catch (feign.FeignException e) {
             log.warn("an error has occurred {}", e.status());
             switch (e.status()) {
                 case 403:
                     model.addAttribute("errorWhileLogin", true);
                     model.addAttribute("errorWhileLoginMessage", "login.wrong.password");
-                    return "login";
+                    return openPage("login");
                 case 404:
                     model.addAttribute("errorWhileLogin", true);
                     model.addAttribute("errorWhileLoginMessage", "login.no.such.user");
-                    return "login";
+                    return openPage("login");
                 default:
                     System.out.println("server error");
-                    return "login";
+                    return openPage("login");
             }
         }
     }
 
-    @GetMapping("/clientcabinet")
-    public String openClientCabinetPage(){
-        System.out.println("in clientcbinet controller");
-        return "index";
+    @RequestMapping("/logout")
+    public String doLogOut(HttpServletRequest request, Model model) {
+
+        HttpSession session = request.getSession();
+        session.invalidate();
+        model.addAttribute("login", new UserDataWhileLogin());
+        return "redirect:/login";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String doLogin(Model model) {
+        UserDataWhileLogin userDataWhileLogin = new UserDataWhileLogin();
+        model.addAttribute("login", userDataWhileLogin);
+        setLastPage("login");
+        return "login";
+    }
+
+    @PostMapping("/registration")
+    public String doRegistration(@Valid @ModelAttribute("registration") UserDataWhileRegistration user, BindingResult bindingResult, HttpServletRequest request) {
+
+        if (bindingResult.hasErrors() || !inputValidation.validatePasswordTwice(user.getPassword(), user.getRepeatedPassword())) {
+            log.warn("input fault while registration detected");
+            ArrayList<String> fieldErrorList = inputValidation.doValidation(bindingResult);
+            request.setAttribute("fieldErrorList", fieldErrorList);
+            return openPage("signup");
+        } else {
+            commonUserActivityServiceClient.doRegistration(user);
+            return "redirect:/login";
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/signup")
+    public String getWelcome(Model model) {
+        UserDataWhileRegistration user = new UserDataWhileRegistration();
+        model.addAttribute("registration", user);
+        setLastPage("login");
+        return "signup";
     }
 }

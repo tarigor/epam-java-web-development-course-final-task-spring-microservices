@@ -2,6 +2,7 @@ package com.epam.requestorderservice;
 
 import com.epam.requestorderservice.entity.ClientOrders;
 import com.epam.requestorderservice.repository.ClientOrdersRepository;
+import com.epam.requestorderservice.repository.RequestRepository;
 import com.epam.requestorderservice.repository.RoomDataRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,11 @@ import java.util.List;
 class RequestOrderServiceApplicationTests {
 
     @Autowired
-    ClientOrdersRepository clientOrdersRepository;
+    RequestRepository requestRepository;
 
     @Test
     void contextLoads() {
-        clientOrdersRepository.getClientOrdersByClientId(1L).forEach(System.out::println);
+        requestRepository.getRequestsByClientId(1l).forEach(System.out::println);
     }
 
 }

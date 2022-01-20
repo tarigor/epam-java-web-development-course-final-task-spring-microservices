@@ -29,8 +29,7 @@
 			<br>
 			<div class="wrapper" style="background-image: url('images/bg-registration-form-2.jpg');">
 				<div class="inner">
-					<%--					<form:form action="${pageContext.request.contextPath}/login" modelAttribute="login">--%>
-					<form action="${pageContext.request.contextPath}/login" method="get">
+					<form:form action="${pageContext.request.contextPath}/command?name=login" modelAttribute="login">
 						<c:if test="${loginAndCompleteRequest}">
 							<input type="hidden" name="loginAndCompleteRequest" value="${loginAndCompleteRequest}">
 							<input type="hidden" name="persons" value="${persons}">
@@ -45,8 +44,8 @@
 						</c:if>
 						<div class="form-wrapper">
 							<label><f:message key="email" bundle="${local}"/></label>
-							<%--							<form:input type="text" path="email" class="form-control"/>--%>
-							<input type="email" name="email" class="form-control">
+							<form:input type="text" path="email" class="form-control"/>
+								<%--							<input type="email" name="email" class="form-control">--%>
 							<c:if test="${fieldErrorList.contains('email')}">
 								<label class="text-warning"
 								       style="font-size: xx-small"><f:message key="validator.wrong.user.email.input"
@@ -55,8 +54,8 @@
 						</div>
 						<div class="form-wrapper">
 							<label><f:message key="password" bundle="${local}"/></label>
-							<%--							<form:input type="password" path="password" class="form-control"/>--%>
-							<input type="password" name="password" class="form-control">
+							<form:input type="password" path="password" class="form-control"/>
+								<%--							<input type="password" name="password" class="form-control">--%>
 							<c:if test="${fieldErrorList.contains('password')}">
 								<label class="text-warning"
 								       style="font-size: xx-small"><f:message key="validator.wrong.user.password.input"
@@ -81,8 +80,8 @@
 							       style="font-size: medium"><f:message key="${errorWhileLoginMessage}"
 							                                            bundle="${local}"/></label>
 						</c:if>
-					</form>
-					<%--					</form:form>--%>
+						<%--					</form>--%>
+					</form:form>
 				</div>
 			</div>
 		</div>

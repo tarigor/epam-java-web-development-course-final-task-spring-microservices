@@ -1,7 +1,7 @@
 package com.epam.apigatewayui.service;
 
 
-import com.epam.apigatewayui.entity.Menu;
+import com.epam.apigatewayui.model.Menu;
 import com.epam.apigatewayui.types.MenuRole;
 
 import java.io.IOException;

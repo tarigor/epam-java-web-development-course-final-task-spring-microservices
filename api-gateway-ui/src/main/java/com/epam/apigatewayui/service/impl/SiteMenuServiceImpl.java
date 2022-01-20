@@ -1,6 +1,6 @@
 package com.epam.apigatewayui.service.impl;
 
-import com.epam.apigatewayui.entity.Menu;
+import com.epam.apigatewayui.model.Menu;
 import com.epam.apigatewayui.service.ISiteMenuService;
 import com.epam.apigatewayui.types.MenuItemDescription;
 import com.epam.apigatewayui.types.MenuRole;

@@ -7,5 +7,11 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/hotelGrodnoDBrequestOrderService</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="hotelGrodnoDBcommonUserService@localhost" uuid="ed79205b-27af-4935-932d-a92d98c0fd1a">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/hotelGrodnoDBcommonUserService</jdbc-url>
+    </data-source>
   </component>
 </project>

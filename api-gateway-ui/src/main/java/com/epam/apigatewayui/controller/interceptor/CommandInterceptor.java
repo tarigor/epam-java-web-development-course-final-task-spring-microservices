@@ -1,9 +1,8 @@
 package com.epam.apigatewayui.controller.interceptor;
 
 import com.epam.apigatewayui.model.User;
-import com.epam.apigatewayui.service.ISiteMenuService;
-import com.epam.apigatewayui.types.MenuRole;
-import com.epam.apigatewayui.types.UserType;
+import com.epam.apigatewayui.service.ICommandService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
@@ -11,11 +10,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Component
-public class MenuInterceptor implements HandlerInterceptor {
+@Slf4j
+public class CommandInterceptor implements HandlerInterceptor {
+
     @Autowired
-    private ISiteMenuService siteMenuService;
+    private ICommandService commandService;
 
     /**
      * Interception point before the execution of a handler. Called after
@@ -39,31 +41,27 @@ public class MenuInterceptor implements HandlerInterceptor {
      * @throws Exception in case of errors
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
-        User loggedUser = (User) request.getSession().getAttribute("user");
-        if (loggedUser != null) {
-            UserType userRole = UserType.valueOf(loggedUser.getUserType());
-            if (userRole.equals(UserType.ADMIN)) {
-                request.getSession().setAttribute("menuList", siteMenuService.getMenuListCollectedByRoleSortedByID(
-                        MenuRole.COMMON,
-                        MenuRole.ADMIN_LOGGED,
-                        MenuRole.ANYONE_LOGGED));
-            } else if (userRole.equals(UserType.CLIENT)) {
-                request.getSession().setAttribute("menuList", siteMenuService.getMenuListCollectedByRoleSortedByID(
-                        MenuRole.COMMON,
-                        MenuRole.CLIENT,
-                        MenuRole.ANYONE_LOGGED));
-            } else {
-                request.getSession().setAttribute("menuList", siteMenuService.getMenuListCollectedByRoleSortedByID(
-                        MenuRole.COMMON,
-                        MenuRole.ANYONE_NOT_LOGGED));
-            }
+        String command = request.getParameter("name");
+        log.info("command detected -> {}", command);
+        log.info("command role -> {}", commandService.getCommandRole(command.toUpperCase()));
+        User user = (User) request.getSession().getAttribute("user");
+        if (checkCommandRole(user, command)) {
+            log.info("user has rights to invoke this command");
+            return true;
         } else {
-            request.getSession().setAttribute("menuList", siteMenuService.getMenuListCollectedByRoleSortedByID(
-                    MenuRole.COMMON,
-                    MenuRole.ANYONE_NOT_LOGGED));
+            log.warn("there is no rights to invoke this command");
         }
         return true;
+    }
+
+    private boolean checkCommandRole(User user, String command) throws IOException {
+
+        String commandRole = commandService.getCommandRole(command.toUpperCase());
+        if (commandRole.contains("ANYONE")) {
+            return true;
+        }
+        return commandRole.contains(user.getUserType());
     }
 }

@@ -1,0 +1,50 @@
+{
+  "LOGIN": {
+    "role": "ANYONE"
+  },
+  "LOGOUT": {
+    "role": "CLIENT,ADMIN"
+  },
+  "REGISTRATION": {
+    "role": "ANYONE"
+  },
+  "REMOVE_ROOM_FROM_BOOKING": {
+    "role": "CLIENT"
+  },
+  "SEND_INVOICE": {
+    "role": "ADMIN"
+  },
+  "ORDER_HANDLING": {
+    "role": "ADMIN"
+  },
+  "REQUEST": {
+    "role": "ANYONE,CLIENT"
+  },
+  "CANCEL_REQUEST": {
+    "role": "CLIENT"
+  },
+  "REQUEST_HANDLING": {
+    "role": "ADMIN"
+  },
+  "ADMINCABINET": {
+    "role": "ADMIN"
+  },
+  "CLIENT-CABINET": {
+    "role": "CLIENT"
+  },
+  "ACCOUNT": {
+    "role": "CLIENT"
+  },
+  "TOP_UP": {
+    "role": "CLIENT"
+  },
+  "PAY": {
+    "role": "CLIENT"
+  },
+  "INVOICE": {
+    "role": "CLIENT"
+  },
+  "REJECT": {
+    "role": "ADMIN"
+  }
+}
