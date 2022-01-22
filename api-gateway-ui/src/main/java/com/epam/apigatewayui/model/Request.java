@@ -17,4 +17,5 @@ public class Request {
     private Date checkInDate;
     private Date checkOutDate;
     private String requestStatus;
+    private String requestSentTime;
 }

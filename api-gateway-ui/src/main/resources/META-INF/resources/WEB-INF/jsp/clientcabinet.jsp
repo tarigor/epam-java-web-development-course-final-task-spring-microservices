@@ -39,6 +39,8 @@
 				                                                      bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.out.date"
 				                                                      bundle="${local}"/></th>
+				<th scope="col" style="text-align: center"><f:message key="request.sent.time"
+				                                                      bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="status.of.request"
 				                                                      bundle="${local}"/></th>
 				<th></th>
@@ -52,6 +54,7 @@
 					<th scope="col" style="text-align: center">${clientRequest.getRequest().getRoomClass()}</th>
 					<th scope="col" style="text-align: center">${clientRequest.getRequest().getCheckInDate()}</th>
 					<th scope="col" style="text-align: center">${clientRequest.getRequest().getCheckOutDate()}</th>
+					<th scope="col" style="text-align: center">${clientRequest.getRequest().getRequestSentTime()}</th>
 					<th scope="col" style="text-align: center"><f:message
 							key="${clientRequest.getRequestStatusDescription()}"
 							bundle="${local}"/></th>
@@ -80,6 +83,7 @@
 				<th scope="col" style="text-align: center"><f:message key="room.class" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.in.date" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.out.date" bundle="${local}"/></th>
+				<th scope="col" style="text-align: center"><f:message key="invoice.receiving.time" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="status" bundle="${local}"/></th>
 				<th></th>
 			</tr>
@@ -93,6 +97,7 @@
 					<th scope="col" style="text-align: center">${clientOrder.getOrder().getRoomClass()}</th>
 					<th scope="col" style="text-align: center">${clientOrder.getOrder().getCheckInDate()}</th>
 					<th scope="col" style="text-align: center">${clientOrder.getOrder().getCheckOutDate()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getOrder().getInvoiceSentTime()}</th>
 					<th scope="col" style="text-align: center"><f:message
 							key="${clientOrder.getOrderStatusDescription()}" bundle="${local}"/></th>
 					<th style="text-align: center">

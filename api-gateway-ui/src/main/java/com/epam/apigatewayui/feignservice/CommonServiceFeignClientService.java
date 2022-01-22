@@ -1,11 +1,14 @@
 package com.epam.apigatewayui.feignservice;
 
+import com.epam.apigatewayui.model.User;
 import com.epam.apigatewayui.model.UserDataWhileLogin;
 import com.epam.apigatewayui.model.UserDataWhileRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CommonServiceFeignClientService {
@@ -31,5 +34,9 @@ public class CommonServiceFeignClientService {
                 passwordEncoder.encode(user.getPassword()),
                 "");
         commonServiceFeignClient.doRegistration(userDataWhileRegistration);
+    }
+
+    public List<User> getClientsForAdminCabinetView(){
+        return commonServiceFeignClient.getClients();
     }
 }

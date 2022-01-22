@@ -24,4 +24,6 @@ public class Orders {
     private Date checkInDate;
     private Date checkOutDate;
     private String orderStatus;
+    private String invoiceSentTime;
+    private String paymentReceivingTime;
 }

@@ -1,5 +1,5 @@
 {
-  "LOGIN": {
+  "LOG-IN": {
     "role": "ANYONE"
   },
   "LOGOUT": {
@@ -11,7 +11,7 @@
   "REMOVE_ROOM_FROM_BOOKING": {
     "role": "CLIENT"
   },
-  "SEND_INVOICE": {
+  "SEND-INVOICE": {
     "role": "ADMIN"
   },
   "ORDER_HANDLING": {
@@ -23,10 +23,10 @@
   "CANCEL_REQUEST": {
     "role": "CLIENT"
   },
-  "REQUEST_HANDLING": {
+  "REQUEST-HANDLING": {
     "role": "ADMIN"
   },
-  "ADMINCABINET": {
+  "ADMIN-CABINET": {
     "role": "ADMIN"
   },
   "CLIENT-CABINET": {

@@ -9,7 +9,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+public class Orders {
     private Integer orderId;
     private long clientId;
     private Integer requestId;
@@ -18,4 +18,6 @@ public class Order {
     private Date checkInDate;
     private Date checkOutDate;
     private String orderStatus;
+    private String invoiceSentTime;
+    private String paymentReceivingTime;
 }

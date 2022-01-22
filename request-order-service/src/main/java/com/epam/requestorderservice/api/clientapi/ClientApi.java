@@ -29,6 +29,9 @@ public class ClientApi {
 
     @PostMapping("/insert-request")
     public Requests insertNewRequest(@RequestBody Requests request) {
+        System.out.println("request received -> " + request.toString());
         return requestRepository.save(request);
     }
+
+
 }

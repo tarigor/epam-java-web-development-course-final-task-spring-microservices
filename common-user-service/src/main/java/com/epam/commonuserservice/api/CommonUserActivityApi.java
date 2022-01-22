@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class CommonUserActivityApi {
@@ -56,5 +58,10 @@ public class CommonUserActivityApi {
     public void doRegistration(@RequestBody User user) {
         System.out.println("received data -> " + user.toString());
         userService.insertNewUser(user);
+    }
+
+    @GetMapping("/get-clients")
+    public List<User> getClients(){
+        return userService.getClients();
     }
 }

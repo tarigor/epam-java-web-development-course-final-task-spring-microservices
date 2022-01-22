@@ -22,4 +22,5 @@ public class Requests {
     private Date checkInDate;
     private Date checkOutDate;
     private String requestStatus;
+    private String requestSentTime;
 }

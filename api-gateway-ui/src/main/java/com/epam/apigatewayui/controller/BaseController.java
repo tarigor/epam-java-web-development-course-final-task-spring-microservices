@@ -4,6 +4,9 @@ import com.epam.apigatewayui.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +27,7 @@ public abstract class BaseController {
         request.getSession().setAttribute("lastpage", pageName);
     }
 
-    protected User getLoggedUser(HttpServletRequest request) {
+    protected User getLoggedUser() {
         return (User) request.getSession().getAttribute("user");
     }
 
@@ -46,5 +49,17 @@ public abstract class BaseController {
                 }
             }
         }
+    }
+
+    protected static Date convertStringToSqlDate(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateSQL = null;
+        try {
+            java.util.Date dateUtil = formatter.parse(date);
+            dateSQL = new Date(dateUtil.getTime());
+        } catch (ParseException e) {
+            e.getStackTrace();
+        }
+        return dateSQL;
     }
 }

@@ -37,6 +37,7 @@ public class CommonActivityController extends BaseController {
 
     @GetMapping("/page")
     public String menuPageNavigate(@RequestParam(name = "name") String pageName, Model model) {
+
         setAttributes();
         if (pageName.equals("signup")) {
             model.addAttribute("registration", new UserDataWhileRegistration());
@@ -54,18 +55,24 @@ public class CommonActivityController extends BaseController {
         return "forward:/" + commandName;
     }
 
-    @RequestMapping(value = "/login")
+    @RequestMapping(value = "/log-in")
     public String login(
             @Valid @ModelAttribute("login") UserDataWhileLogin userDataWhileLogin,
             @RequestParam(name = "loginAndCompleteRequest", required = false) String loginAndCompleteRequest,
-            BindingResult bindingResult, HttpServletRequest request, Model model) {
+            HttpServletRequest request, Model model) {
 
-        System.out.println("user -> " + userDataWhileLogin.toString());
         try {
             String body = Objects.requireNonNull(commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin).getBody()).toString();
             User user = gson.fromJson(body, User.class);
             request.getSession().setAttribute("user", user);
-            return "redirect:/client-cabinet";
+            if (user.getUserType().equals("CLIENT")) {
+                if (Boolean.parseBoolean(loginAndCompleteRequest)) {
+                    return "forward:/client-request";
+                }
+                return "redirect:/client-cabinet";
+            } else {
+                return "redirect:/admin-cabinet";
+            }
         } catch (feign.FeignException e) {
             log.warn("an error has occurred {}", e.status());
             switch (e.status()) {
@@ -78,7 +85,6 @@ public class CommonActivityController extends BaseController {
                     model.addAttribute("errorWhileLoginMessage", "login.no.such.user");
                     return openPage("login");
                 default:
-                    System.out.println("server error");
                     return openPage("login");
             }
         }
@@ -93,7 +99,7 @@ public class CommonActivityController extends BaseController {
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login")
     public String doLogin(Model model) {
         UserDataWhileLogin userDataWhileLogin = new UserDataWhileLogin();
         model.addAttribute("login", userDataWhileLogin);
@@ -121,5 +127,23 @@ public class CommonActivityController extends BaseController {
         model.addAttribute("registration", user);
         setLastPage("login");
         return "signup";
+    }
+
+    @RequestMapping("/request")
+    public String doRequest(@RequestParam(name = "persons") String persons,
+                            @RequestParam(name = "roomClass") String roomClass,
+                            @RequestParam(name = "datefilter") String dateFilter,
+                            HttpServletRequest request) {
+
+        request.setAttribute("persons", persons);
+        request.setAttribute("roomClass", roomClass);
+        request.setAttribute("datefilter", dateFilter);
+        User loggedUser = getLoggedUser();
+        if (loggedUser == null) {
+            request.setAttribute("loginAndCompleteRequest", true);
+            return "forward:/login";
+        } else {
+            return "forward:/client-request";
+        }
     }
 }

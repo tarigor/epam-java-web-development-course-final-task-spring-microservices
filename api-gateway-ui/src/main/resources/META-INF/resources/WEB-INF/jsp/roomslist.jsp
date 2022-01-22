@@ -14,9 +14,11 @@
 </head>
 <body class="u-body">
 <c:import url="common/menu.jsp"/>
+
 <section class="u-clearfix u-image u-section-1" id="sec-3a70" data-image-width="1280" data-image-height="700">
 	<div class="u-clearfix u-sheet u-sheet-1">
-		<a style="color: white;text-align: center">
+		<br>
+		<a style="color: white; text-align: center">
 			<f:message key="roomslist.page.name" bundle="${local}"/></a>
 		<br>
 		<div class="u-clearfix u-custom-html u-expanded-width u-preserve-proportions u-custom-html-1">
@@ -25,7 +27,7 @@
 			<div class="container">
 				<div class="row text-center">
 					<div class="col-12">
-						<form method="post" action="${pageContext.request.contextPath}/command?name=send_invoice">
+						<form method="post" action="${pageContext.request.contextPath}/command?name=send-invoice">
 							<input type="hidden" name="requestID" value="${clientRequest.getRequestID()}">
 							<input type="hidden" name="clientID" value="${clientRequest.getClientID()}">
 							<input type="hidden" name="persons" value="${clientRequest.getPersons()}">
@@ -74,7 +76,7 @@
 									<th scope="col" style="text-align: center">${clientRequest.getDateFrom()}</th>
 									<th scope="col" style="text-align: center">${clientRequest.getDateTo()}</th>
 									<th scope="col" style="text-align: center"><f:message
-											key="${clientRequest.getRequestStatus().getDescription()}"
+											key="${clientRequest.getRequestOrderStatus().getDescription()}"
 											bundle="${local}"/></th>
 									<th style="text-align: center">
 										<a href="<c:url value="${pageContext.request.contextPath}/command?name=reject&request=${clientRequest.getRequestID()}"/>">
@@ -96,9 +98,8 @@
 									<th scope="col" style="text-align:center"><f:message key="room.id"
 									                                                     bundle="${local}"/></th>
 									<th scope="col" style="text-align:center"></th>
-									<th scope="col" style="text-align:center"><f:message key="room.id"
-									                                                     bundle="${local}"/><f:message
-											key="persons" bundle="${local}"/></th>
+									<th scope="col" style="text-align:center"><f:message key="persons"
+									                                                     bundle="${local}"/></th>
 									<th scope="col" style="text-align:center"><f:message key="room.class"
 									                                                     bundle="${local}"/></th>
 									<th scope="col" style="text-align:center"><f:message key="price"
@@ -126,11 +127,11 @@
 										<img src="https://www.travelline.ru/resource/images/rt/3652/637321324083617504-c802f669-089d-466d-a31c-d7cd2ba5afe8"
 										     class="img-fluid img-thumbnail" alt="image" style="height:100px;">
 									</td>
-									<td style="text-align:center">${roomsData.get(0).getPersons()}</td>
+									<td style="text-align:center">${roomsData.get(0).getPersonsInRoom()}</td>
 									<td style="text-align:center"><f:message
 											key="${roomsData.get(0).getRoomClass().getDescription()}"
 											bundle="${local}"/></td>
-									<td style="text-align:center">${roomsData.get(0).getCost()} USD</td>
+									<td style="text-align:center">${roomsData.get(0).getRoomCost()} USD</td>
 								</tr>
 								<tr>
 									<th scope="row" class="text-center">
@@ -152,11 +153,11 @@
 										<img src="https://www.travelline.ru/resource/images/rt/19641/637321325354036836-a772be13-ef6f-474d-be09-5fd8af3b7b30"
 										     class="img-fluid img-thumbnail" alt="image" style="height:100px;">
 									</td>
-									<td style="text-align:center">${roomsData.get(1).getPersons()}</td>
+									<td style="text-align:center">${roomsData.get(5).getPersonsInRoom()}</td>
 									<td style="text-align:center"><f:message
-											key="${roomsData.get(1).getRoomClass().getDescription()}"
+											key="${roomsData.get(5).getRoomClass().getDescription()}"
 											bundle="${local}"/></td>
-									<td style="text-align:center">${roomsData.get(1).getCost()} USD</td>
+									<td style="text-align:center">${roomsData.get(5).getRoomCost()} USD</td>
 								</tr>
 								<tr>
 									<th scope="row" class="text-center">
@@ -178,11 +179,11 @@
 										<img src="https://www.travelline.ru/resource/images/rt/3650/637321325650296040-d8c427ef-b9ba-4699-a059-8e2fdbff6c44"
 										     class="img-fluid img-thumbnail" alt="image" style="height:100px;">
 									</td>
-									<td style="text-align:center">${roomsData.get(2).getPersons()}</td>
+									<td style="text-align:center">${roomsData.get(9).getPersonsInRoom()}</td>
 									<td style="text-align:center"><f:message
-											key="${roomsData.get(2).getRoomClass().getDescription()}"
+											key="${roomsData.get(9).getRoomClass().getDescription()}"
 											bundle="${local}"/></td>
-									<td style="text-align:center">${roomsData.get(2).getCost()} USD</td>
+									<td style="text-align:center">${roomsData.get(9).getRoomCost()} USD</td>
 								</tr>
 								<tr>
 									<th scope="row" class="text-center">
@@ -204,11 +205,11 @@
 										<img src="https://www.travelline.ru/resource/images/rt/3649/637321325955926799-0183cc73-13c0-4933-9df3-7a910272a833"
 										     class="img-fluid img-thumbnail" alt="image" style="height:100px;">
 									</td>
-									<td style="text-align:center">${roomsData.get(3).getPersons()}</td>
+									<td style="text-align:center">${roomsData.get(12).getPersonsInRoom()}</td>
 									<td style="text-align:center"><f:message
-											key="${roomsData.get(3).getRoomClass().getDescription()}"
+											key="${roomsData.get(12).getRoomClass().getDescription()}"
 											bundle="${local}"/></td>
-									<td style="text-align:center">${roomsData.get(3).getCost()} USD</td>
+									<td style="text-align:center">${roomsData.get(12).getRoomCost()} USD</td>
 								</tr>
 								<tr class="text-center">
 									<td></td>

@@ -23,7 +23,9 @@ import java.sql.Date;
         "       room_class,\n" +
         "       check_in_date,\n" +
         "       check_out_date,\n" +
-        "       order_status\n" +
+        "       order_status,\n" +
+        "       invoice_sent_time,\n" +
+        "       payment_receiving_time\n" +
         "from orders\n" +
         "         join room r on orders.room_id = r.id\n" +
         "         join room_class rc on r.room_class_id = rc.id")
@@ -38,4 +40,6 @@ public class ClientOrders {
     private Date checkInDate;
     private Date checkOutDate;
     private String orderStatus;
+    private String invoiceSentTime;
+    private String paymentReceivingTime;
 }

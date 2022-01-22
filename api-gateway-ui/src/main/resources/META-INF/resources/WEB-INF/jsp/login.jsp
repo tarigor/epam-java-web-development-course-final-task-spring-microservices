@@ -29,7 +29,7 @@
 			<br>
 			<div class="wrapper" style="background-image: url('images/bg-registration-form-2.jpg');">
 				<div class="inner">
-					<form:form action="${pageContext.request.contextPath}/command?name=login" modelAttribute="login">
+					<form:form action="${pageContext.request.contextPath}/command?name=log-in" modelAttribute="login">
 						<c:if test="${loginAndCompleteRequest}">
 							<input type="hidden" name="loginAndCompleteRequest" value="${loginAndCompleteRequest}">
 							<input type="hidden" name="persons" value="${persons}">

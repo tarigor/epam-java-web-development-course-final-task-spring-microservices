@@ -14,7 +14,8 @@
 <body class="u-body">
 <c:import url="common/menu.jsp"/>
 <section class="u-clearfix u-image u-section-1" id="sec-b41e" data-image-width="1280" data-image-height="839">
-	<div class="u-align-left u-clearfix u-sheet u-sheet-1">
+	<%--	<div class="u-align-left u-clearfix u-sheet u-sheet-1">--%>
+	<div class="u-clearfix u-sheet u-sheet-1">
 		<br>
 		<h3 class="u-align-center u-custom-font u-font-georgia u-text u-text-default u-text-1" style="color: white">
 			<f:message
@@ -43,6 +44,8 @@
 				                                                      bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.out.date"
 				                                                      bundle="${local}"/></th>
+				<th scope="col" style="text-align: center"><f:message key="request.sent.time"
+				                                                      bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="status.of.request"
 				                                                      bundle="${local}"/></th>
 				<th></th>
@@ -59,10 +62,11 @@
 					<th scope="col" style="text-align: center">${clientRequest.getRoomClass()}</th>
 					<th scope="col" style="text-align: center">${clientRequest.getDateFrom()}</th>
 					<th scope="col" style="text-align: center">${clientRequest.getDateTo()}</th>
+					<th scope="col" style="text-align: center">${clientRequest.getRequestSentTime()}</th>
 					<th scope="col" style="text-align: center"><f:message
-							key="${clientRequest.getRequestStatus().getDescription()}" bundle="${local}"/></th>
+							key="${clientRequest.getRequestOrderStatus().getDescription()}" bundle="${local}"/></th>
 					<th style="text-align: center">
-						<a href="<c:url value="${pageContext.request.contextPath}/command?name=request_handling
+						<a href="<c:url value="${pageContext.request.contextPath}/command?name=request-handling
 						&requestID=${clientRequest.getRequestID()}
 						&firstName=${clientRequest.getFirstName()}
 						&lastName=${clientRequest.getLastName()}
@@ -99,6 +103,8 @@
 				<th scope="col" style="text-align: center"><f:message key="room.class" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.in.date" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.out.date" bundle="${local}"/></th>
+				<th scope="col" style="text-align: center"><f:message key="invoice.sent.time" bundle="${local}"/></th>
+				<th scope="col" style="text-align: center"><f:message key="payment.receiving.time" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="status.of.booking" bundle="${local}"/></th>
 				<th></th>
 			</tr>
@@ -115,8 +121,10 @@
 					<th scope="col" style="text-align: center">${clientOrder.getRoomClass()}</th>
 					<th scope="col" style="text-align: center">${clientOrder.getCheckInDate()}</th>
 					<th scope="col" style="text-align: center">${clientOrder.getCheckOutDate()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getInvoiceSentTime()}</th>
+					<th scope="col" style="text-align: center">${clientOrder.getPaymentReceivingTime()}</th>
 					<th scope="col" style="text-align: center"><f:message
-							key="${clientOrder.getOrderStatus().getDescription()}" bundle="${local}"/></th>
+							key="${clientOrder.getRequestOrderStatus().getDescription()}" bundle="${local}"/></th>
 					<th style="text-align: center">
 						<a>
 							<c:if test="${clientOrder.isCanBeCanceled()}">

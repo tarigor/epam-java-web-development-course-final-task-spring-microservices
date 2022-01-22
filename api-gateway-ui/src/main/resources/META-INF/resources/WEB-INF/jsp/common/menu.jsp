@@ -15,7 +15,7 @@
 				</c:when>
 				<c:when test="${sessionScope.user.getUserType().contains('CLIENT')}">
 					<a><f:message key="header.hello"
-					              bundle="${local}"/> ${sessionScope.user.getUserFirstName()} ${sessionScope.user.getUserLastName()}!</a>
+					              bundle="${local}"/> ${sessionScope.user.getFirstName()} ${sessionScope.user.getLastName()}!</a>
 				</c:when>
 			</c:choose>
 		</p>
