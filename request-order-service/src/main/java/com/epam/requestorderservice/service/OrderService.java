@@ -1,7 +1,9 @@
 package com.epam.requestorderservice.service;
 
 import com.epam.requestorderservice.entity.Orders;
+import com.epam.requestorderservice.feignservice.EmailingServiceFeignClientService;
 import com.epam.requestorderservice.model.OrdersDataWhileInsert;
+import com.epam.requestorderservice.model.User;
 import com.epam.requestorderservice.repository.OrderRepository;
 import com.epam.requestorderservice.repository.RequestRepository;
 import com.epam.requestorderservice.type.RequestOrderStatus;
@@ -21,43 +23,45 @@ public class OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private RequestRepository requestRepository;
+    @Autowired
+    private EmailingServiceFeignClientService emailingServiceFeignClientService;
 
     @Transactional
     public void insertNewOrder(OrdersDataWhileInsert orders) {
 
         insertOrder(
                 Integer.parseInt(orders.getRequestID()),
-                Long.parseLong(orders.getClientID()),
+                orders.getUser(),
                 orders.getSingleRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
         insertOrder(
                 Integer.parseInt(orders.getRequestID()),
-                Long.parseLong(orders.getClientID()),
+                orders.getUser(),
                 orders.getDoubleRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
         insertOrder(
                 Integer.parseInt(orders.getRequestID()),
-                Long.parseLong(orders.getClientID()),
+                orders.getUser(),
                 orders.getSuiteRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
         insertOrder(
                 Integer.parseInt(orders.getRequestID()),
-                Long.parseLong(orders.getClientID()),
+                orders.getUser(),
                 orders.getDeluxeRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
     }
 
-    private void insertOrder(Integer requestID, Long clientID, String[] roomsSelected, Date dateFrom, Date dateTo) {
+    private void insertOrder(Integer requestID, User user, String[] roomsSelected, Date dateFrom, Date dateTo) {
         if (roomsSelected != null && roomsSelected.length != 0) {
             for (String room : roomsSelected) {
-                orderRepository.save(new Orders(
+                Orders savedOrder = orderRepository.save(new Orders(
                         0,
                         requestID,
-                        clientID,
+                        user.getId(),
                         Integer.parseInt(room),
                         dateFrom,
                         dateTo,
@@ -65,7 +69,7 @@ public class OrderService {
                         getCurrentTime(),
                         "-"
                 ));
-
+                emailingServiceFeignClientService.sentEmailToClient(user, requestID, savedOrder.getOrderId());
             }
         }
         requestRepository.changeRequestStatus(RequestOrderStatus.REQUEST_PROCESSED.name(), requestID);

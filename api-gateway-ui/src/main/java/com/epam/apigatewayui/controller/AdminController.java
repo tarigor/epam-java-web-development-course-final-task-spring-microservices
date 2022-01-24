@@ -3,6 +3,7 @@ package com.epam.apigatewayui.controller;
 import com.epam.apigatewayui.feignservice.RequestOrderServiceFeignClient;
 import com.epam.apigatewayui.feignservice.RequestOrderServiceFeignClientService;
 import com.epam.apigatewayui.model.OrdersDataWhileInsert;
+import com.epam.apigatewayui.model.User;
 import com.epam.apigatewayui.service.impl.AdminViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,12 +55,15 @@ public class AdminController extends BaseController {
             @RequestParam(name = "dateFrom") String dateFrom,
             @RequestParam(name = "dateTo") String dateTo,
             @RequestParam(name = "clientID") String clientID,
+            @RequestParam(name = "firstName") String firstName,
+            @RequestParam(name = "lastName") String lastName,
+            @RequestParam(name = "email") String email,
             @RequestParam(name = "requestID") String requestID
     ) {
 
         requestOrderServiceFeignClient.insertNewOrder(new OrdersDataWhileInsert(
                 requestID,
-                clientID,
+                new User(Long.parseLong(clientID), firstName, lastName, email, ""),
                 singleRoomsSelected,
                 doubleRoomsSelected,
                 suiteRoomsSelected,
@@ -71,7 +75,7 @@ public class AdminController extends BaseController {
     }
 
     @RequestMapping(value = "reject")
-    public String rejectRequest(@RequestParam(value = "request")Integer requestID){
+    public String rejectRequest(@RequestParam(value = "request") Integer requestID) {
 
         requestOrderServiceFeignClient.rejectRequest(requestID);
         return "redirect:/admin-cabinet";

@@ -26,7 +26,7 @@ public class ClientController extends BaseController {
                             @RequestParam(name = "roomClass") String roomClass,
                             @RequestParam(name = "datefilter") String dateFilter) {
 
-        clientServiceFeignClient.insertRequest(getLoggedUser().getId(), Integer.valueOf(persons), roomClass, dateFilter);
+        clientServiceFeignClient.insertRequest(getLoggedUser(), Integer.valueOf(persons), roomClass, dateFilter);
         return "forward:/client-cabinet";
     }
 }

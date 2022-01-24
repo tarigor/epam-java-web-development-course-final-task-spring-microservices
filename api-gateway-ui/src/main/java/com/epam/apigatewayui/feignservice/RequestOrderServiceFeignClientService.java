@@ -36,19 +36,19 @@ public class RequestOrderServiceFeignClientService {
         return clientOrders.stream().map(OrderView::new).collect(Collectors.toList());
     }
 
-    public void insertRequest(long clientId, Integer persons, String roomClass, String dateFilter) {
+    public void insertRequest(User user, Integer persons, String roomClass, String dateFilter) {
         Date checkInDateSQL = convertStringToSqlDate(dateFilter.split(":")[0].trim());
         Date checkOutDateSQL = convertStringToSqlDate(dateFilter.split(":")[1].trim());
-        requestOrderServiceFeignClient.insertRequest(new Request(
+        requestOrderServiceFeignClient.insertRequest(new InsertRequestData(user, new Request(
                 0,
-                clientId,
+                user.getId(),
                 persons,
                 roomClass,
                 checkInDateSQL,
                 checkOutDateSQL,
                 RequestOrderStatus.WAITING_FOR_APPROVAL.name(),
                 getCurrentTime()
-        ));
+        )));
     }
 
     private String getCurrentTime() {

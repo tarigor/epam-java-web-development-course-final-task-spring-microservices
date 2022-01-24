@@ -1,23 +1,19 @@
-package com.epam.apigatewayui.model;
+package com.epam.mailingservice.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * The entity of user table.
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
-    @JsonProperty("id")
     private long id;
-    @JsonProperty("firstName")
     private String firstName;
-    @JsonProperty("lastName")
     private String lastName;
-    @JsonProperty("email")
     private String email;
-    @JsonProperty("userType")
     private String userType;
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrdersDataWhileInsert {
     private String requestID;
-    private String clientID;
+    private User user;
     private String[] singleRoomsSelected;
     private String[] doubleRoomsSelected;
     private String[] suiteRoomsSelected;

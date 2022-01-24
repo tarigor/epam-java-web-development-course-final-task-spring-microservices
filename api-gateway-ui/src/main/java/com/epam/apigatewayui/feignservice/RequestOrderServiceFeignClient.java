@@ -19,7 +19,7 @@ public interface RequestOrderServiceFeignClient {
     List<Orders> getClientOrders(@PathVariable long clientId);
 
     @PostMapping(value = "/client/insert-request", consumes = "application/json")
-    void insertRequest(@RequestBody Request request);
+    void insertRequest(@RequestBody InsertRequestData insertRequestData);
 
     @GetMapping("/admin/get-orders")
     List<Orders> getClientsOrders();

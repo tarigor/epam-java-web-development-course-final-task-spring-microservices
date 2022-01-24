@@ -31,6 +31,9 @@
 							<input type="hidden" name="requestID" value="${clientRequest.getRequestID()}">
 							<input type="hidden" name="clientID" value="${clientRequest.getClientID()}">
 							<input type="hidden" name="persons" value="${clientRequest.getPersons()}">
+							<input type="hidden" name="firstName" value="${clientRequest.getFirstName()}">
+							<input type="hidden" name="lastName" value="${clientRequest.getLastName()}">
+							<input type="hidden" name="email" value="${clientRequest.getEmail()}">
 							<table class="u-align-center table"
 							       style="margin-left: auto;margin-right: auto;text-align: center">
 								<thead class="u-grey-80 u-opacity u-opacity-70">

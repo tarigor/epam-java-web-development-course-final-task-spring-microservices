@@ -2,8 +2,10 @@ package com.epam.requestorderservice.api.clientapi;
 
 import com.epam.requestorderservice.entity.ClientOrders;
 import com.epam.requestorderservice.entity.Requests;
+import com.epam.requestorderservice.model.InsertRequestData;
 import com.epam.requestorderservice.repository.ClientOrdersRepository;
 import com.epam.requestorderservice.repository.RequestRepository;
+import com.epam.requestorderservice.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,8 @@ public class ClientApi {
     private RequestRepository requestRepository;
     @Autowired
     private ClientOrdersRepository clientOrdersRepository;
+    @Autowired
+    private RequestService requestService;
 
     @GetMapping("/get-requests/{clientId}")
     public List<Requests> getClientRequests(@PathVariable Long clientId) {
@@ -28,9 +32,8 @@ public class ClientApi {
     }
 
     @PostMapping("/insert-request")
-    public Requests insertNewRequest(@RequestBody Requests request) {
-        System.out.println("request received -> " + request.toString());
-        return requestRepository.save(request);
+    public Requests insertNewRequest(@RequestBody InsertRequestData insertRequestData) {
+        return requestService.insertRequest(insertRequestData);
     }
 
 
