@@ -38,4 +38,7 @@ public interface RequestOrderServiceFeignClient {
 
     @PostMapping(value = "/admin/reject/{requestId}")
     void rejectRequest(@PathVariable Integer requestId);
+
+    @PostMapping("/modify-order-status-paid/{orderID}")
+    void changeOrderStatus(@PathVariable Integer orderID);
 }

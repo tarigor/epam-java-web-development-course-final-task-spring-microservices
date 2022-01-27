@@ -87,6 +87,10 @@ public class RequestOrderServiceFeignClientService {
         return requestOrderServiceFeignClient.getRooms();
     }
 
+    public Double getRoomPriceByRoomID(int roomId){
+        return getRooms().stream().filter(roomData -> roomData.getId().equals(roomId)).findFirst().get().getRoomCost();
+    }
+
     public ClientRequestView getRequestByRequestId(Integer requestId) {
         Request request = requestOrderServiceFeignClient.getClientsRequests().stream()
                 .filter(r -> r.getRequestId().equals(requestId))
@@ -107,5 +111,9 @@ public class RequestOrderServiceFeignClientService {
                 RequestOrderStatus.valueOf(request.getRequestStatus()),
                 request.getRequestSentTime()
         );
+    }
+
+    public void changeOrderStatus(int orderID){
+        requestOrderServiceFeignClient.changeOrderStatus(orderID);
     }
 }

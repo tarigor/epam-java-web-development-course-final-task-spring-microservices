@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="html" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" %>
 
 <f:setLocale value="${sessionScope.language}" scope="session"/>
@@ -29,7 +28,7 @@
 			<br>
 			<div class="wrapper" style="background-image: url('images/bg-registration-form-2.jpg');">
 				<div class="inner">
-					<form:form action="${pageContext.request.contextPath}/command?name=pay" modelAttribute="payment">
+					<form action="">
 						<h3 class="text-center"><f:message key="invoice.page.name" bundle="${local}"/></h3>
 						<div class="form-wrapper">
 							<a class=" text-center"><f:message key="account.holder" bundle="${local}"/>:</a>
@@ -38,10 +37,10 @@
 								<a> </a>
 								<a>${sessionScope.user.getLastName()}</a>
 							</label>
-								<%--							<a class=" text-center"><f:message key="account.balance" bundle="${local}"/>:</a>--%>
-								<%--							<label for=""--%>
-								<%--							       class="form-control text-center align-middle">${String.format("%.2f",sessionScope.user.getAccount())}--%>
-								<%--								USD</label>--%>
+							<a class=" text-center"><f:message key="account.balance" bundle="${local}"/>:</a>
+							<label for=""
+							       class="form-control text-center align-middle">${String.format("%.2f",sessionScope.user.getAccount())}
+								USD</label>
 						</div>
 						<div class="form-wrapper">
 							<a href="<c:url value="${pageContext.request.contextPath}/page?name=chargeaccount"/>"
@@ -85,29 +84,34 @@
 							</tr>
 							</tbody>
 						</table>
-						<form:hidden path="clientID" id="" value="${sessionScope.user.getId()}"/>
-						<form:hidden path="orderID" id="" value="${orderID}"/>
-						<form:hidden path="requestID" id="" value="${requestID}"/>
-						<form:hidden path="roomID" id="" value="${roomID}"/>
-						<form:hidden path="roomPrice" id="" value="${roomPrice}"/>
-						
 						<c:choose>
 							<c:when test="${notEnoughMoney}">
 								<label style="text-align: center;font-size: medium;color: #e68387 "><f:message
 										key="account.not.enough.money"
 										bundle="${local}"/></label>
 							</c:when>
-							<c:otherwise>
-								<button type="submit"
-								        class="btn btn-success form-control text-center align-middle"
-								        style="text-align: center;color: white"><f:message
-										key="account.pay"
-										bundle="${local}"/></button>
 							
+<%--							order.getPrice(),--%>
+<%--							order.getCurrency(),--%>
+<%--							order.getMethod(),--%>
+<%--							order.getIntent(),--%>
+<%--							order.getDescription()--%>
+<%--							Payment for room booking as per #orderID made by #cleintID--%>
+							<c:otherwise>
+								<a href="<c:url value="${pageContext.request.contextPath}/command?name=pay
+																&clientID=${sessionScope.user.getUserID()}
+																&orderID=${orderID}
+																&requestID=${requestID}
+																&roomID=${roomID}
+																&roomPrice=${roomPrice}
+																"/>"
+								   class="btn btn-success form-control text-center align-middle"
+								   style="text-align: center;color: white"><f:message
+										key="account.pay"
+										bundle="${local}"/></a>
 							</c:otherwise>
 						</c:choose>
-						
-					</form:form>
+					</form>
 				</div>
 			</div>
 		</div>

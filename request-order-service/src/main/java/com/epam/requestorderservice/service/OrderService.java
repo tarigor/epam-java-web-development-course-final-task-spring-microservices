@@ -75,6 +75,10 @@ public class OrderService {
         requestRepository.changeRequestStatus(RequestOrderStatus.REQUEST_PROCESSED.name(), requestID);
     }
 
+    public void changeOrderStatus(int orderID) {
+        orderRepository.changeOrderStatus(RequestOrderStatus.PAID_AND_BOOKED.name(), orderID);
+    }
+
     private String getCurrentTime() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");

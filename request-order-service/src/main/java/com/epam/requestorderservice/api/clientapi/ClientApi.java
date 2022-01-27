@@ -3,8 +3,10 @@ package com.epam.requestorderservice.api.clientapi;
 import com.epam.requestorderservice.entity.ClientOrders;
 import com.epam.requestorderservice.entity.Requests;
 import com.epam.requestorderservice.model.InsertRequestData;
+import com.epam.requestorderservice.model.OrderStatusModifier;
 import com.epam.requestorderservice.repository.ClientOrdersRepository;
 import com.epam.requestorderservice.repository.RequestRepository;
+import com.epam.requestorderservice.service.OrderService;
 import com.epam.requestorderservice.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,8 @@ public class ClientApi {
     private ClientOrdersRepository clientOrdersRepository;
     @Autowired
     private RequestService requestService;
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/get-requests/{clientId}")
     public List<Requests> getClientRequests(@PathVariable Long clientId) {
@@ -36,5 +40,8 @@ public class ClientApi {
         return requestService.insertRequest(insertRequestData);
     }
 
-
+    @PostMapping("/modify-order-status-paid/{orderID}")
+    public void changeOrderStatus(@PathVariable Integer orderID){
+        orderService.changeOrderStatus(orderID);
+    }
 }

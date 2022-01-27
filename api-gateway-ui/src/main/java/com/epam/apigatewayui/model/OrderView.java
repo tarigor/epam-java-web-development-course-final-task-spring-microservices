@@ -10,7 +10,7 @@ public class OrderView {
     public OrderView(Orders order) {
         this.order = order;
         this.orderStatusDescription = RequestOrderStatus.valueOf(order.getOrderStatus()).getDescription();
-        this.paymentRequired = order.getOrderStatus().equals(RequestOrderStatus.WAITING_FOR_APPROVAL.name());
+        this.paymentRequired = order.getOrderStatus().equals(RequestOrderStatus.APPROVED_WAITING_FOR_PAYMENT.name());
     }
 
     public Orders getOrder() {
