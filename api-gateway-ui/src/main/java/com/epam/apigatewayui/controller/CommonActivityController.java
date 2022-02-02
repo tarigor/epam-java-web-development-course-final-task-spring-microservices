@@ -8,10 +8,12 @@ import com.epam.apigatewayui.service.IInputValidation;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -61,7 +63,9 @@ public class CommonActivityController extends BaseController {
             @RequestParam(name = "loginAndCompleteRequest", required = false) String loginAndCompleteRequest,
             HttpServletRequest request, Model model) {
 
-        try {
+        HttpStatus httpStatus = commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin).getStatusCode();
+        System.out.println("first status code -> " + httpStatus);
+        if (httpStatus.equals(HttpStatus.OK)) {
             String body = Objects.requireNonNull(commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin).getBody()).toString();
             User user = gson.fromJson(body, User.class);
             request.getSession().setAttribute("user", user);
@@ -73,9 +77,9 @@ public class CommonActivityController extends BaseController {
             } else {
                 return "redirect:/admin-cabinet";
             }
-        } catch (feign.FeignException e) {
-            log.warn("an error has occurred {}", e.status());
-            switch (e.status()) {
+        } else {
+            System.out.println("status code -> " + httpStatus.value());
+            switch (httpStatus.value()) {
                 case 403:
                     model.addAttribute("errorWhileLogin", true);
                     model.addAttribute("errorWhileLoginMessage", "login.wrong.password");
@@ -84,10 +88,47 @@ public class CommonActivityController extends BaseController {
                     model.addAttribute("errorWhileLogin", true);
                     model.addAttribute("errorWhileLoginMessage", "login.no.such.user");
                     return openPage("login");
+                case 503:
+                    System.out.println("service not available");
+                    model.addAttribute("serviceError", "Sorry, but login service temporally not available, please try later");
+                    return openPage("login");
                 default:
                     return openPage("login");
             }
         }
+
+
+//        try {
+//            String body = Objects.requireNonNull(commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin).getBody()).toString();
+//            User user = gson.fromJson(body, User.class);
+//            request.getSession().setAttribute("user", user);
+//            if (user.getUserType().equals("CLIENT")) {
+//                if (Boolean.parseBoolean(loginAndCompleteRequest)) {
+//                    return "forward:/client-request";
+//                }
+//                return "redirect:/client-cabinet";
+//            } else {
+//                return "redirect:/admin-cabinet";
+//            }
+//        } catch (feign.FeignException e) {
+//            log.warn("an error has occurred {}", e.status());
+//            switch (e.status()) {
+//                case 403:
+//                    model.addAttribute("errorWhileLogin", true);
+//                    model.addAttribute("errorWhileLoginMessage", "login.wrong.password");
+//                    return openPage("login");
+//                case 404:
+//                    model.addAttribute("errorWhileLogin", true);
+//                    model.addAttribute("errorWhileLoginMessage", "login.no.such.user");
+//                    return openPage("login");
+//                case 503:
+//                    System.out.println("service not available");
+//                    model.addAttribute("serviceError", "Sorry, but login service temporally not available, please try later");
+//                    return openPage("login");
+//                default:
+//                    return openPage("login");
+//            }
+//        }
     }
 
     @RequestMapping("/logout")
@@ -145,5 +186,35 @@ public class CommonActivityController extends BaseController {
         } else {
             return "forward:/client-request";
         }
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleMyException(Exception exception) {
+//        System.out.println("cause ->" + exception.getCause().toString());
+//        System.out.println("result -> " + exception.getClass().getName().contains("HystrixRuntimeException"));
+//        System.out.println("exception class -> " + exception.getClass().getName());
+//        System.out.println("last page -> " + getLastPage());
+//        System.out.println("error local message ->" + exception.getLocalizedMessage());
+        System.out.println("execption message -> " + exception.getMessage());
+        ModelAndView mv;
+        if (exception != null) {
+            mv = new ModelAndView("redirect:error-page?error=" + exception.getMessage());
+        } else {
+            mv = new ModelAndView("redirect:error-page");
+        }
+        return mv;
+    }
+
+    @GetMapping("/error-page")
+    public String handleMyExceptionOnRedirect(@RequestParam(value = "error", required = false) String error) {
+        System.out.println("in error");
+        if (error != null) {
+            ModelAndView mv = new ModelAndView();
+            mv.addObject("error", error);
+        } else {
+
+        }
+
+        return openPage("errorpage");
     }
 }

@@ -82,6 +82,9 @@
 						</c:if>
 						<%--					</form>--%>
 					</form:form>
+					<c:if test="${serviceError!=null}">
+						<h1>${serviceError}</h1>
+					</c:if>
 				</div>
 			</div>
 		</div>

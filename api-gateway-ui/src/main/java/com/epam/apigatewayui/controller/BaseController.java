@@ -16,6 +16,7 @@ public abstract class BaseController {
     @Autowired
     private HttpServletRequest request;
     protected static HashMap<String, Object> attributesMap = new HashMap<>();
+    private String lastPage;
 
     protected String openPage(String pageName) {
         storeAttributesInMap(request);
@@ -23,8 +24,12 @@ public abstract class BaseController {
         return pageName;
     }
 
-    protected void setLastPage(String pageName){
-        request.getSession().setAttribute("lastpage", pageName);
+    protected void setLastPage(String page){
+        lastPage = page;
+        request.getSession().setAttribute("lastpage", lastPage);
+    }
+    protected String getLastPage(){
+        return lastPage;
     }
 
     protected User getLoggedUser() {

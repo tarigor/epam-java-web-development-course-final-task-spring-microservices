@@ -18,7 +18,8 @@
 <section class="u-clearfix u-image u-section-1" id="carousel_b7ce" data-image-width="1280" data-image-height="839">
 	<div class="u-align-left u-clearfix u-sheet u-sheet-1">
 		<h4 class="u-custom-font u-font-georgia u-text u-text-body-alt-color u-text-default u-text-1">
-			<f:message key="${errorMessage}" bundle="${local}"/>
+<%--			<f:message key="${errorMessage}" bundle="${local}"/>--%>
+			<a>${error}</a>
 		</h4>
 	</div>
 </section>
