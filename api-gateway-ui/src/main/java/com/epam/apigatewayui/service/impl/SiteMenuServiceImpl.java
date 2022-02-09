@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class SiteMenuServiceImpl implements ISiteMenuService {
 
-//    public static final String JSON = "./src/main/resources/factory/menu.json";
+    //    public static final String JSON = "./src/main/resources/factory/menu.json";
     public static final String JSON = "factory/menu.json";
     public static final String ID = "id";
     public static final String COMMAND = "command";

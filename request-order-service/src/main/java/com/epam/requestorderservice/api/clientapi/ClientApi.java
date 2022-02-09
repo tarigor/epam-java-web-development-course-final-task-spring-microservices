@@ -3,12 +3,12 @@ package com.epam.requestorderservice.api.clientapi;
 import com.epam.requestorderservice.entity.ClientOrders;
 import com.epam.requestorderservice.entity.Requests;
 import com.epam.requestorderservice.model.InsertRequestData;
-import com.epam.requestorderservice.model.OrderStatusModifier;
 import com.epam.requestorderservice.repository.ClientOrdersRepository;
 import com.epam.requestorderservice.repository.RequestRepository;
 import com.epam.requestorderservice.service.OrderService;
 import com.epam.requestorderservice.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +41,9 @@ public class ClientApi {
     }
 
     @PostMapping("/modify-order-status-paid/{orderID}")
-    public void changeOrderStatus(@PathVariable Integer orderID){
+    public HttpStatus changeOrderStatus(@PathVariable Integer orderID) {
+        System.out.println("in change order status");
         orderService.changeOrderStatus(orderID);
+        return HttpStatus.OK;
     }
 }

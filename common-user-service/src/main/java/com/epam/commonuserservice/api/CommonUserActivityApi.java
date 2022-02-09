@@ -55,13 +55,14 @@ public class CommonUserActivityApi {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/registration")
-    public void doRegistration(@RequestBody User user) {
+    public HttpStatus doRegistration(@RequestBody User user) {
         System.out.println("received data -> " + user.toString());
         userService.insertNewUser(user);
+        return HttpStatus.OK;
     }
 
     @GetMapping("/get-clients")
-    public List<User> getClients(){
+    public List<User> getClients() {
         return userService.getClients();
     }
 }

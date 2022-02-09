@@ -9,17 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class CommonServiceFeignClientFactoryFallback implements FallbackFactory<CommonServiceFeignClient> {
     @Override
     public CommonServiceFeignClient create(Throwable cause) {
-        int status = ((FeignException)cause).status();
-        if(cause.getClass().getName().contains("RetryableException")){
+        int status = ((FeignException) cause).status();
+        if (cause.getClass().getName().contains("RetryableException")) {
             status = 503;
         }
         int finalStatus = status;
+        System.out.println("final status ->" + finalStatus);
         return new CommonServiceFeignClient() {
             @Override
             public ResponseEntity<Object> doLogin(String email, String password) {
@@ -27,13 +29,18 @@ public class CommonServiceFeignClientFactoryFallback implements FallbackFactory<
             }
 
             @Override
-            public void doRegistration(UserDataWhileRegistration user) {
-throw  new FeignException.ServiceUnavailable(" ",);
+            public HttpStatus doRegistration(UserDataWhileRegistration user) {
+                return HttpStatus.SERVICE_UNAVAILABLE;
             }
 
             @Override
-            public List<User> getClients() {
-                return null;
+            public ResponseEntity<List<User>> getClients() {
+                return new ResponseEntity<List<User>>(new ArrayList<>() {
+                    @Override
+                    public void add(int index, User element) {
+                        super.add(index, element);
+                    }
+                }, HttpStatus.SERVICE_UNAVAILABLE);
             }
         };
     }

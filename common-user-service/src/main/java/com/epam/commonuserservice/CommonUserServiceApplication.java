@@ -11,13 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableEurekaClient
 public class CommonUserServiceApplication {
 
+    public static void main(String[] args) {
+        SpringApplication.run(CommonUserServiceApplication.class, args);
+    }
+
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(CommonUserServiceApplication.class, args);
     }
 
 }

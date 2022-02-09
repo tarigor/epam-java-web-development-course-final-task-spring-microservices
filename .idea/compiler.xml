@@ -13,6 +13,7 @@
         <module name="config-server" />
         <module name="apigateway-ui" />
         <module name="mailing-service" />
+        <module name="hystrix-dashboard" />
         <module name="common-user-service" />
         <module name="api-gateway-ui" />
         <module name="hotel-grodno-inn-microservices" />
@@ -35,6 +36,7 @@
       <module name="common-user-activity--service" options="-parameters" />
       <module name="common-user-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="hystrix-dashboard" options="-parameters" />
       <module name="mailing-service" options="-parameters" />
       <module name="payment-service" options="-parameters" />
       <module name="request-order-service" options="-parameters" />

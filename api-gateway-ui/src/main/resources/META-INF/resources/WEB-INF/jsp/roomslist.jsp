@@ -226,6 +226,7 @@
 								</tr>
 								</tbody>
 							</table>
+							<c:import url="common/serviceerror.jsp"/>
 						</form>
 					</div>
 				</div>

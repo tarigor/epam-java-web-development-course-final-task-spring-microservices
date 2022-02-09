@@ -91,12 +91,12 @@
 										bundle="${local}"/></label>
 							</c:when>
 							
-<%--							order.getPrice(),--%>
-<%--							order.getCurrency(),--%>
-<%--							order.getMethod(),--%>
-<%--							order.getIntent(),--%>
-<%--							order.getDescription()--%>
-<%--							Payment for room booking as per #orderID made by #cleintID--%>
+							<%--							order.getPrice(),--%>
+							<%--							order.getCurrency(),--%>
+							<%--							order.getMethod(),--%>
+							<%--							order.getIntent(),--%>
+							<%--							order.getDescription()--%>
+							<%--							Payment for room booking as per #orderID made by #cleintID--%>
 							<c:otherwise>
 								<a href="<c:url value="${pageContext.request.contextPath}/command?name=pay
 																&clientID=${sessionScope.user.getUserID()}

@@ -4,7 +4,7 @@ import com.epam.apigatewayui.model.User;
 import com.epam.apigatewayui.model.UserDataWhileLogin;
 import com.epam.apigatewayui.model.UserDataWhileRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class CommonServiceFeignClientService {
                 userDataWhileLogin.getPassword());
     }
 
-    public void doRegistration(UserDataWhileRegistration user) {
+    public HttpStatus doRegistration(UserDataWhileRegistration user) {
         UserDataWhileRegistration userDataWhileRegistration = new UserDataWhileRegistration(
                 user.getFirstName(),
                 user.getLastName(),
@@ -34,10 +34,10 @@ public class CommonServiceFeignClientService {
                 user.getEmail(),
                 passwordEncoder.encode(user.getPassword()),
                 "");
-        commonServiceFeignClient.doRegistration(userDataWhileRegistration);
+        return commonServiceFeignClient.doRegistration(userDataWhileRegistration);
     }
 
-    public List<User> getClientsForAdminCabinetView() {
+    public ResponseEntity<List<User>> getClientsForAdminCabinetView() {
         return commonServiceFeignClient.getClients();
     }
 }

@@ -8,6 +8,7 @@ import com.epam.requestorderservice.repository.OrderRepository;
 import com.epam.requestorderservice.repository.RequestRepository;
 import com.epam.requestorderservice.type.RequestOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,36 +27,50 @@ public class OrderService {
     @Autowired
     private EmailingServiceFeignClientService emailingServiceFeignClientService;
 
-    @Transactional
-    public void insertNewOrder(OrdersDataWhileInsert orders) {
+    protected static Date convertStringToSqlDate(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateSQL = null;
+        try {
+            java.util.Date dateUtil = formatter.parse(date);
+            dateSQL = new Date(dateUtil.getTime());
+        } catch (ParseException e) {
+            e.getStackTrace();
+        }
+        return dateSQL;
+    }
 
-        insertOrder(
+    @Transactional
+    public HttpStatus insertNewOrder(OrdersDataWhileInsert orders) {
+
+        boolean res1 = insertOrder(
                 Integer.parseInt(orders.getRequestID()),
                 orders.getUser(),
                 orders.getSingleRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
-        insertOrder(
+        boolean res2 = insertOrder(
                 Integer.parseInt(orders.getRequestID()),
                 orders.getUser(),
                 orders.getDoubleRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
-        insertOrder(
+        boolean res3 = insertOrder(
                 Integer.parseInt(orders.getRequestID()),
                 orders.getUser(),
                 orders.getSuiteRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
-        insertOrder(
+        boolean res4 = insertOrder(
                 Integer.parseInt(orders.getRequestID()),
                 orders.getUser(),
                 orders.getDeluxeRoomsSelected(),
                 convertStringToSqlDate(orders.getDateFrom()),
                 convertStringToSqlDate(orders.getDateTo()));
+        return res1 && res2 && res3 && res4 ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
-    private void insertOrder(Integer requestID, User user, String[] roomsSelected, Date dateFrom, Date dateTo) {
+    private boolean insertOrder(Integer requestID, User user, String[] roomsSelected, Date dateFrom, Date dateTo) {
+        boolean res = false;
         if (roomsSelected != null && roomsSelected.length != 0) {
             for (String room : roomsSelected) {
                 Orders savedOrder = orderRepository.save(new Orders(
@@ -69,13 +84,18 @@ public class OrderService {
                         getCurrentTime(),
                         "-"
                 ));
+                if (savedOrder != null) {
+                    res = true;
+                }
                 emailingServiceFeignClientService.sentEmailToClient(user, requestID, savedOrder.getOrderId());
             }
         }
         requestRepository.changeRequestStatus(RequestOrderStatus.REQUEST_PROCESSED.name(), requestID);
+        return res;
     }
 
     public void changeOrderStatus(int orderID) {
+        System.out.println("in change order status 2 , order -> " + orderID);
         orderRepository.changeOrderStatus(RequestOrderStatus.PAID_AND_BOOKED.name(), orderID);
     }
 
@@ -83,17 +103,5 @@ public class OrderService {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         return sdf.format(cal.getTime());
-    }
-
-    protected static Date convertStringToSqlDate(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateSQL = null;
-        try {
-            java.util.Date dateUtil = formatter.parse(date);
-            dateSQL = new Date(dateUtil.getTime());
-        } catch (ParseException e) {
-            e.getStackTrace();
-        }
-        return dateSQL;
     }
 }

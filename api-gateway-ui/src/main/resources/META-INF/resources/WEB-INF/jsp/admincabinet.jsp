@@ -104,7 +104,8 @@
 				<th scope="col" style="text-align: center"><f:message key="check.in.date" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.out.date" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="invoice.sent.time" bundle="${local}"/></th>
-				<th scope="col" style="text-align: center"><f:message key="payment.receiving.time" bundle="${local}"/></th>
+				<th scope="col" style="text-align: center"><f:message key="payment.receiving.time"
+				                                                      bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="status.of.booking" bundle="${local}"/></th>
 				<th></th>
 			</tr>
@@ -145,6 +146,7 @@
 			</c:forEach>
 			</tbody>
 		</table>
+		<c:import url="common/serviceerror.jsp"/>
 	</div>
 </section>
 <c:import url="common/footer.jsp"/>

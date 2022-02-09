@@ -83,7 +83,8 @@
 				<th scope="col" style="text-align: center"><f:message key="room.class" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.in.date" bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="check.out.date" bundle="${local}"/></th>
-				<th scope="col" style="text-align: center"><f:message key="invoice.receiving.time" bundle="${local}"/></th>
+				<th scope="col" style="text-align: center"><f:message key="invoice.receiving.time"
+				                                                      bundle="${local}"/></th>
 				<th scope="col" style="text-align: center"><f:message key="status" bundle="${local}"/></th>
 				<th></th>
 			</tr>
@@ -120,6 +121,7 @@
 			</c:forEach>
 			</tbody>
 		</table>
+		<c:import url="common/serviceerror.jsp"/>
 	</div>
 </section>
 

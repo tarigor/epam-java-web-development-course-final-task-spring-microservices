@@ -20,6 +20,10 @@ public class MailingServiceApplication {
     @Autowired
     private Environment env;
 
+    public static void main(String[] args) {
+        SpringApplication.run(MailingServiceApplication.class, args);
+    }
+
     @Bean
     public JavaMailSender getMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -37,10 +41,6 @@ public class MailingServiceApplication {
         props.put("mail.debug", "true");
 
         return mailSender;
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(MailingServiceApplication.class, args);
     }
 
 }

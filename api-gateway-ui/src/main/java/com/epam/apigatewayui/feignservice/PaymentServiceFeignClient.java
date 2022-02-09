@@ -1,19 +1,25 @@
 package com.epam.apigatewayui.feignservice;
 
+import com.epam.apigatewayui.feignservice.fallback.PaymentServiceFeignClientFactoryFallback;
 import com.epam.apigatewayui.model.Order;
 import com.epam.apigatewayui.model.PaymentDetails;
 import com.paypal.api.payments.Payment;
-import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "PAYMENT-SERVICE", url = "http://localhost:8090")
+@Primary
+@FeignClient(name = "PAYMENT-SERVICE", url = "http://localhost:8090", fallbackFactory = PaymentServiceFeignClientFactoryFallback.class)
 public interface PaymentServiceFeignClient {
 
     @PostMapping(value = "/create-payment", consumes = "application/json")
-    Payment createPayment(@RequestBody Order order) throws PayPalRESTException;
+    ResponseEntity<Payment> createPayment(@RequestBody Order order);
 
     @PostMapping(value = "/do-payment", consumes = "application/json")
-    Payment executePayment(@RequestBody PaymentDetails paymentDetails);
+    ResponseEntity<Payment> executePayment(@RequestBody PaymentDetails paymentDetails);
+
+    @PostMapping(value = "/test", consumes = "application/json")
+    ResponseEntity<String> test(String text);
 }

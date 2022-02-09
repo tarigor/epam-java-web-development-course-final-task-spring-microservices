@@ -5,8 +5,10 @@ import com.epam.apigatewayui.feignservice.RequestOrderServiceFeignClientService;
 import com.epam.apigatewayui.model.*;
 import com.epam.apigatewayui.types.RequestOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.naming.ServiceUnavailableException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +20,9 @@ public class AdminViewService {
     @Autowired
     private RequestOrderServiceFeignClientService requestOrderServiceFeignClientService;
 
-    public List<ClientOrderView> getClientsOrdersForAdminCabinetView() {
-        List<Orders> clientOrders = requestOrderServiceFeignClientService.getOrdersForAdminCabinetView();
-        List<User> clients = commonServiceFeignClientService.getClientsForAdminCabinetView();
+    public ResponseEntity<List<ClientOrderView>> getClientsOrdersForAdminCabinetView() throws ServiceUnavailableException {
+        List<Orders> clientOrders = requestOrderServiceFeignClientService.getOrdersForAdminCabinetView().getBody();
+        List<User> clients = commonServiceFeignClientService.getClientsForAdminCabinetView().getBody();
         List<ClientOrderView> clientOrdersAdminView = new ArrayList<>();
         for (Orders order : clientOrders) {
             for (User user : clients) {
@@ -42,12 +44,12 @@ public class AdminViewService {
                 }
             }
         }
-        return clientOrdersAdminView;
+        return new ResponseEntity<>(clientOrdersAdminView, requestOrderServiceFeignClientService.getOrdersForAdminCabinetView().getStatusCode());
     }
 
-    public List<ClientRequestView> getClientsRequestsForAdminCabinetView() {
-        List<Request> clientRequests = requestOrderServiceFeignClientService.getRequestsForAdminCabinetView();
-        List<User> clients = commonServiceFeignClientService.getClientsForAdminCabinetView();
+    public ResponseEntity<List<ClientRequestView>> getClientsRequestsForAdminCabinetView() {
+        List<Request> clientRequests = requestOrderServiceFeignClientService.getRequestsForAdminCabinetView().getBody();
+        List<User> clients = commonServiceFeignClientService.getClientsForAdminCabinetView().getBody();
         List<ClientRequestView> clientRequestAdminView = new ArrayList<>();
         for (Request request : clientRequests) {
             for (User user : clients) {
@@ -68,6 +70,6 @@ public class AdminViewService {
                 }
             }
         }
-        return clientRequestAdminView;
+        return new ResponseEntity<>(clientRequestAdminView, requestOrderServiceFeignClientService.getRequestsForAdminCabinetView().getStatusCode());
     }
 }

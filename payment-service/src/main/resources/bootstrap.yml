@@ -3,3 +3,9 @@ spring:
     config:
       enabled: true
       uri: http://localhost:8086
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

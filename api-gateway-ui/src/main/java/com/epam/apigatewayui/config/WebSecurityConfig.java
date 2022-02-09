@@ -3,7 +3,6 @@ package com.epam.apigatewayui.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -21,7 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
 //                разрешаем полный доступ для определенных страниц
-                .antMatchers("/*", "/home", "/js/**", "/css/**"
+                .antMatchers("/**", "/home", "/js/**", "/css/**", "/turbine/**", "/actuator/**"
 //                        ,
 //                        "/index", "/registration",
 //                        "/downloads/**", "/static/**", "/shared/**", "/rest/**"
@@ -35,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .formLogin()
-                .loginPage("/login")
+//                .loginPage("/login")
                 .permitAll()
                 .and()
                 .logout()
@@ -44,7 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
 //        http.csrf().disable();
     }
-
 //    @Override
 //    public void configure(WebSecurity web) throws Exception {
 //        web.ignoring().antMatchers("/static/**");

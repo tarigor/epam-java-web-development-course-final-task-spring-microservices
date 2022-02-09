@@ -3,6 +3,8 @@ package com.epam.apigatewayui.feignservice;
 import com.epam.apigatewayui.model.*;
 import com.epam.apigatewayui.types.RequestOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -10,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,26 +23,42 @@ public class RequestOrderServiceFeignClientService {
     @Autowired
     private CommonServiceFeignClient commonServiceFeignClient;
 
-    public List<RequestView> getClientRequestsForView(Long clientId) {
-        return getRequestsListForView(requestOrderServiceFeignClient.getClientRequests(clientId));
+    private static Date convertStringToSqlDate(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateSQL = null;
+        try {
+            java.util.Date dateUtil = formatter.parse(date);
+            dateSQL = new Date(dateUtil.getTime());
+        } catch (ParseException e) {
+            e.getStackTrace();
+        }
+        return dateSQL;
+    }
+
+    public ResponseEntity<List<RequestView>> getClientRequestsForView(Long clientId) {
+        return new ResponseEntity<>(
+                getRequestsListForView(Objects.requireNonNull(requestOrderServiceFeignClient.getClientRequests(clientId).getBody())),
+                requestOrderServiceFeignClient.getClientRequests(clientId).getStatusCode());
     }
 
     private List<RequestView> getRequestsListForView(List<Request> clientRequests) {
         return clientRequests.stream().map(RequestView::new).collect(Collectors.toList());
     }
 
-    public List<OrderView> getClientOrdersForView(Long clientId) {
-        return getOrdersListForView(requestOrderServiceFeignClient.getClientOrders(clientId));
+    public ResponseEntity<List<OrderView>> getClientOrdersForView(Long clientId) {
+        return new ResponseEntity<>(getOrdersListForView(
+                Objects.requireNonNull(requestOrderServiceFeignClient.getClientOrders(clientId).getBody())),
+                requestOrderServiceFeignClient.getClientOrders(clientId).getStatusCode());
     }
 
     private List<OrderView> getOrdersListForView(List<Orders> clientOrders) {
         return clientOrders.stream().map(OrderView::new).collect(Collectors.toList());
     }
 
-    public void insertRequest(User user, Integer persons, String roomClass, String dateFilter) {
+    public HttpStatus insertRequest(User user, Integer persons, String roomClass, String dateFilter) {
         Date checkInDateSQL = convertStringToSqlDate(dateFilter.split(":")[0].trim());
         Date checkOutDateSQL = convertStringToSqlDate(dateFilter.split(":")[1].trim());
-        requestOrderServiceFeignClient.insertRequest(new InsertRequestData(user, new Request(
+        return requestOrderServiceFeignClient.insertRequest(new InsertRequestData(user, new Request(
                 0,
                 user.getId(),
                 persons,
@@ -57,48 +76,34 @@ public class RequestOrderServiceFeignClientService {
         return sdf.format(cal.getTime());
     }
 
-    private static Date convertStringToSqlDate(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateSQL = null;
-        try {
-            java.util.Date dateUtil = formatter.parse(date);
-            dateSQL = new Date(dateUtil.getTime());
-        } catch (ParseException e) {
-            e.getStackTrace();
-        }
-        return dateSQL;
-    }
-
-    public List<Request> getRequestsForAdminCabinetView() {
-        List<Request> requestList = requestOrderServiceFeignClient.getClientsRequests();
+    public ResponseEntity<List<Request>> getRequestsForAdminCabinetView() {
         System.out.println("REQUESTS");
-        requestList.forEach(System.out::println);
-        return requestList;
+        return requestOrderServiceFeignClient.getClientsRequests();
     }
 
-    public List<Orders> getOrdersForAdminCabinetView() {
-        List<Orders> orderList = requestOrderServiceFeignClient.getClientsOrders();
+    public ResponseEntity<List<Orders>> getOrdersForAdminCabinetView() {
         System.out.println("ORDERS");
-        orderList.forEach(System.out::println);
-        return orderList;
+        return requestOrderServiceFeignClient.getClientsOrders();
     }
 
-    public List<RoomData> getRooms() {
+    public ResponseEntity<List<RoomData>> getRooms() {
         return requestOrderServiceFeignClient.getRooms();
     }
 
-    public Double getRoomPriceByRoomID(int roomId){
-        return getRooms().stream().filter(roomData -> roomData.getId().equals(roomId)).findFirst().get().getRoomCost();
+    public ResponseEntity<Double> getRoomPriceByRoomID(int roomId) {
+        return new ResponseEntity<>(Objects.requireNonNull(getRooms().getBody()).stream()
+                .filter(roomData -> roomData.getId().equals(roomId))
+                .findFirst().get().getRoomCost(), getRooms().getStatusCode());
     }
 
-    public ClientRequestView getRequestByRequestId(Integer requestId) {
-        Request request = requestOrderServiceFeignClient.getClientsRequests().stream()
+    public ResponseEntity<ClientRequestView> getRequestByRequestId(Integer requestId) {
+        Request request = Objects.requireNonNull(requestOrderServiceFeignClient.getClientsRequests().getBody()).stream()
                 .filter(r -> r.getRequestId().equals(requestId))
                 .findFirst().get();
-        User user = commonServiceFeignClient.getClients().stream()
+        User user = commonServiceFeignClient.getClients().getBody().stream()
                 .filter(u -> u.getId() == request.getClientId())
                 .findFirst().get();
-        return new ClientRequestView(
+        return new ResponseEntity<>(new ClientRequestView(
                 request.getRequestId(),
                 request.getClientId(),
                 user.getFirstName(),
@@ -110,10 +115,10 @@ public class RequestOrderServiceFeignClientService {
                 request.getCheckOutDate(),
                 RequestOrderStatus.valueOf(request.getRequestStatus()),
                 request.getRequestSentTime()
-        );
+        ), requestOrderServiceFeignClient.getClientsRequests().getStatusCode());
     }
 
-    public void changeOrderStatus(int orderID){
+    public void changeOrderStatus(int orderID) {
         requestOrderServiceFeignClient.changeOrderStatus(orderID);
     }
 }

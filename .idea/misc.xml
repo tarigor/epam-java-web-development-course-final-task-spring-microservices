@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/payment-service/pom.xml" />
         <option value="$PROJECT_DIR$/mailing-service/pom.xml" />
         <option value="$PROJECT_DIR$/common-user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/hystrix-dashboard/pom.xml" />
       </list>
     </option>
   </component>

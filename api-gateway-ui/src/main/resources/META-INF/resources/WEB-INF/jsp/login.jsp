@@ -85,6 +85,7 @@
 					<c:if test="${serviceError!=null}">
 						<h1>${serviceError}</h1>
 					</c:if>
+					<c:import url="common/serviceerror.jsp"/>
 				</div>
 			</div>
 		</div>

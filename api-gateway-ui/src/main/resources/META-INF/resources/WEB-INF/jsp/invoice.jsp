@@ -106,8 +106,9 @@
 							
 							</c:otherwise>
 						</c:choose>
-						
+
 					</form:form>
+					<c:import url="common/serviceerror.jsp"/>
 				</div>
 			</div>
 		</div>

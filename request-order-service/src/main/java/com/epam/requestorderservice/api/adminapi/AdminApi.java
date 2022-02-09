@@ -11,6 +11,8 @@ import com.epam.requestorderservice.service.OrderService;
 import com.epam.requestorderservice.service.RequestService;
 import com.epam.requestorderservice.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -33,8 +35,8 @@ public class AdminApi {
 
 
     @GetMapping("/get-requests")
-    public List<Requests> getClientsRequests() {
-        return requestRepository.findAll();
+    public ResponseEntity<List<Requests>> getClientsRequests() {
+        return new ResponseEntity<>(requestRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/get-orders")
@@ -53,8 +55,9 @@ public class AdminApi {
     }
 
     @PostMapping("/insert-order")
-    public void insertNewOrder(@RequestBody OrdersDataWhileInsert ordersDataWhileInsert) {
-        orderService.insertNewOrder(ordersDataWhileInsert);
+    public HttpStatus insertNewOrder(@RequestBody OrdersDataWhileInsert ordersDataWhileInsert) {
+        System.out.println("in Insert new order, order data -> " + ordersDataWhileInsert.toString());
+        return orderService.insertNewOrder(ordersDataWhileInsert);
     }
 
     @PostMapping(value = "/reject/{requestId}")

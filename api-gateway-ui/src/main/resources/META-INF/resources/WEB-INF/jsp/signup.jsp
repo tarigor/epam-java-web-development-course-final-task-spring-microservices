@@ -26,7 +26,8 @@
 			<link rel="stylesheet" href="css/style.css">
 			<div class="wrapper">
 				<div class="inner">
-					<form:form action="${pageContext.request.contextPath}/command?name=registration" modelAttribute="registration">
+					<form:form action="${pageContext.request.contextPath}/command?name=registration"
+					           modelAttribute="registration">
 						<h3>Registration Form</h3>
 						<div class="form-group">
 							<div class="form-wrapper">
@@ -97,14 +98,13 @@
 							<label class="text-warning" style="text-align: center;font-size: medium">
 								<f:message key="signup.user.fault" bundle="${local}"/></label>
 						</c:if>
-					
 					</form:form>
+					<c:import url="common/serviceerror.jsp"/>
 				</div>
 			</div><!-- This templates was made by Colorlib (https://colorlib.com) -->
 		</div>
 	</div>
 </section>
-
 <script src=<c:url value="../../js/validation.js"/>>
 </script>
 

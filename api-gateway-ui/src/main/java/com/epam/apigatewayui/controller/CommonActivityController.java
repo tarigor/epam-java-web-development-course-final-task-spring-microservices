@@ -9,12 +9,14 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.naming.ServiceUnavailableException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -63,10 +65,11 @@ public class CommonActivityController extends BaseController {
             @RequestParam(name = "loginAndCompleteRequest", required = false) String loginAndCompleteRequest,
             HttpServletRequest request, Model model) {
 
-        HttpStatus httpStatus = commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin).getStatusCode();
+        ResponseEntity<Object> responseEntity = commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin);
+        HttpStatus httpStatus = responseEntity.getStatusCode();
         System.out.println("first status code -> " + httpStatus);
         if (httpStatus.equals(HttpStatus.OK)) {
-            String body = Objects.requireNonNull(commonUserActivityServiceClient.getUserWithStatusCode(userDataWhileLogin).getBody()).toString();
+            String body = Objects.requireNonNull(responseEntity.getBody()).toString();
             User user = gson.fromJson(body, User.class);
             request.getSession().setAttribute("user", user);
             if (user.getUserType().equals("CLIENT")) {
@@ -89,8 +92,7 @@ public class CommonActivityController extends BaseController {
                     model.addAttribute("errorWhileLoginMessage", "login.no.such.user");
                     return openPage("login");
                 case 503:
-                    System.out.println("service not available");
-                    model.addAttribute("serviceError", "Sorry, but login service temporally not available, please try later");
+                    request.setAttribute("serviceErrorMessage", HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase());
                     return openPage("login");
                 default:
                     return openPage("login");
@@ -137,19 +139,18 @@ public class CommonActivityController extends BaseController {
         HttpSession session = request.getSession();
         session.invalidate();
         model.addAttribute("login", new UserDataWhileLogin());
-        return "redirect:/login";
+        return "redirect:/login-cmd";
     }
 
-    @RequestMapping(value = "/login")
+    @RequestMapping(value = "/login-cmd")
     public String doLogin(Model model) {
         UserDataWhileLogin userDataWhileLogin = new UserDataWhileLogin();
         model.addAttribute("login", userDataWhileLogin);
-        setLastPage("login");
-        return "login";
+        return openPage("login");
     }
 
     @PostMapping("/registration")
-    public String doRegistration(@Valid @ModelAttribute("registration") UserDataWhileRegistration user, BindingResult bindingResult, HttpServletRequest request) {
+    public String doRegistration(@Valid @ModelAttribute("registration") UserDataWhileRegistration user, BindingResult bindingResult, HttpServletRequest request) throws ServiceUnavailableException {
 
         if (bindingResult.hasErrors() || !inputValidation.validatePasswordTwice(user.getPassword(), user.getRepeatedPassword())) {
             log.warn("input fault while registration detected");
@@ -157,17 +158,20 @@ public class CommonActivityController extends BaseController {
             request.setAttribute("fieldErrorList", fieldErrorList);
             return openPage("signup");
         } else {
-            commonUserActivityServiceClient.doRegistration(user);
-            return "redirect:/login";
+            HttpStatus httpStatus = commonUserActivityServiceClient.doRegistration(user);
+            if (checkForServiceError(httpStatus, request)) {
+                return "redirect:/signup?serviceErrorMessage=" + httpStatus.getReasonPhrase();
+            }
+            return "redirect:/login-cmd";
         }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/signup")
-    public String getWelcome(Model model) {
+    public String getWelcome(@RequestParam(value = "serviceErrorMessage", required = false) String serviceErrorMessage, Model model) {
+        model.addAttribute("serviceErrorMessage", serviceErrorMessage);
         UserDataWhileRegistration user = new UserDataWhileRegistration();
         model.addAttribute("registration", user);
-        setLastPage("login");
-        return "signup";
+        return openPage("signup");
     }
 
     @RequestMapping("/request")
@@ -182,39 +186,16 @@ public class CommonActivityController extends BaseController {
         User loggedUser = getLoggedUser();
         if (loggedUser == null) {
             request.setAttribute("loginAndCompleteRequest", true);
-            return "forward:/login";
+            return "forward:/login-cmd";
         } else {
             return "forward:/client-request";
         }
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, ServiceUnavailableException.class, java.net.ConnectException.class})
     public ModelAndView handleMyException(Exception exception) {
-//        System.out.println("cause ->" + exception.getCause().toString());
-//        System.out.println("result -> " + exception.getClass().getName().contains("HystrixRuntimeException"));
-//        System.out.println("exception class -> " + exception.getClass().getName());
-//        System.out.println("last page -> " + getLastPage());
-//        System.out.println("error local message ->" + exception.getLocalizedMessage());
-        System.out.println("execption message -> " + exception.getMessage());
-        ModelAndView mv;
-        if (exception != null) {
-            mv = new ModelAndView("redirect:error-page?error=" + exception.getMessage());
-        } else {
-            mv = new ModelAndView("redirect:error-page");
-        }
-        return mv;
-    }
-
-    @GetMapping("/error-page")
-    public String handleMyExceptionOnRedirect(@RequestParam(value = "error", required = false) String error) {
-        System.out.println("in error");
-        if (error != null) {
-            ModelAndView mv = new ModelAndView();
-            mv.addObject("error", error);
-        } else {
-
-        }
-
-        return openPage("errorpage");
+        log.warn(exception.getMessage());
+        System.out.println("in exception handler, lastpage -> " + getLastPage());
+        return new ModelAndView("redirect:" + getLastPage() + "?serviceErrorMessage=" + "Sorry, but service temporally not available, please try later");
     }
 }

@@ -4,3 +4,12 @@ server:
 spring:
   application:
     name: API-GATEWAY-UI
+  zipkin:
+    base-url: http://localhost:9411
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 15000
+        readTimeout: 15000
+        loggerLevel: FULL

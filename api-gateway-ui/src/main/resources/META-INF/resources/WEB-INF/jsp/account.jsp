@@ -71,6 +71,7 @@
 									bundle="${local}"/></a>
 						</c:if>
 					</form>
+					<c:import url="common/serviceerror.jsp"/>
 				</div>
 			</div>
 		</div>

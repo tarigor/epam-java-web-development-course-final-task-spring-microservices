@@ -2,17 +2,19 @@ package com.epam.apigatewayui.controller;
 
 import com.epam.apigatewayui.feignservice.RequestOrderServiceFeignClient;
 import com.epam.apigatewayui.feignservice.RequestOrderServiceFeignClientService;
-import com.epam.apigatewayui.model.OrdersDataWhileInsert;
-import com.epam.apigatewayui.model.User;
+import com.epam.apigatewayui.model.*;
 import com.epam.apigatewayui.service.impl.AdminViewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.naming.ServiceUnavailableException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class AdminController extends BaseController {
@@ -25,10 +27,15 @@ public class AdminController extends BaseController {
     private RequestOrderServiceFeignClient requestOrderServiceFeignClient;
 
     @GetMapping(value = "admin-cabinet")
-    public String goAdminCabinet(HttpServletRequest request) {
+    public String goAdminCabinet(HttpServletRequest request) throws ServiceUnavailableException {
 
-        request.getSession().setAttribute("clientRequests", adminViewService.getClientsRequestsForAdminCabinetView());
-        request.getSession().setAttribute("clientOrders", adminViewService.getClientsOrdersForAdminCabinetView());
+        ResponseEntity<List<ClientRequestView>> listClientRequestsResponseEntity = adminViewService.getClientsRequestsForAdminCabinetView();
+        checkForServiceError(listClientRequestsResponseEntity.getStatusCode(), request);
+        request.getSession().setAttribute("clientRequests", listClientRequestsResponseEntity.getBody());
+
+        ResponseEntity<List<ClientOrderView>> listClientOrderResponseEntity = adminViewService.getClientsOrdersForAdminCabinetView();
+        checkForServiceError(listClientOrderResponseEntity.getStatusCode(), request);
+        request.getSession().setAttribute("clientOrders", listClientOrderResponseEntity.getBody());
         return openPage("admincabinet");
     }
 
@@ -38,11 +45,19 @@ public class AdminController extends BaseController {
                              @RequestParam("dateTo") String dateTo,
                              HttpServletRequest request) {
 
-        request.getSession().setAttribute("clientRequest", requestOrderServiceFeignClientService.getRequestByRequestId(Integer.valueOf(requestID)));
-        request.getSession().setAttribute("roomArrayList", requestOrderServiceFeignClient.getFreeRooms(dateFrom, dateTo));
+        ResponseEntity<ClientRequestView> clientRequestViewResponseEntity = requestOrderServiceFeignClientService.getRequestByRequestId(Integer.valueOf(requestID));
+        checkForServiceError(clientRequestViewResponseEntity.getStatusCode(), request);
+        request.getSession().setAttribute("clientRequest", clientRequestViewResponseEntity.getBody());
+
+        ResponseEntity<List<RoomView>> roomViewResponseEntity = requestOrderServiceFeignClient.getFreeRooms(dateFrom, dateTo);
+        checkForServiceError(roomViewResponseEntity.getStatusCode(), request);
+        request.getSession().setAttribute("roomArrayList", roomViewResponseEntity.getBody());
         request.getSession().setAttribute("dateFrom", dateFrom);
         request.getSession().setAttribute("dateTo", dateTo);
-        request.getSession().setAttribute("roomsData", requestOrderServiceFeignClientService.getRooms());
+
+        ResponseEntity<List<RoomData>> roomDataResponseEntity = requestOrderServiceFeignClientService.getRooms();
+        checkForServiceError(roomDataResponseEntity.getStatusCode(), request);
+        request.getSession().setAttribute("roomsData", roomDataResponseEntity.getBody());
         return openPage("roomslist");
     }
 
@@ -58,26 +73,28 @@ public class AdminController extends BaseController {
             @RequestParam(name = "firstName") String firstName,
             @RequestParam(name = "lastName") String lastName,
             @RequestParam(name = "email") String email,
-            @RequestParam(name = "requestID") String requestID
+            @RequestParam(name = "requestID") String requestID,
+            HttpServletRequest request
     ) {
 
-        requestOrderServiceFeignClient.insertNewOrder(new OrdersDataWhileInsert(
-                requestID,
-                new User(Long.parseLong(clientID), firstName, lastName, email, ""),
-                singleRoomsSelected,
-                doubleRoomsSelected,
-                suiteRoomsSelected,
-                deluxeRoomsSelected,
-                dateFrom,
-                dateTo
-        ));
+        checkForServiceError(
+                requestOrderServiceFeignClient.insertNewOrder(new OrdersDataWhileInsert(
+                        requestID,
+                        new User(Long.parseLong(clientID), firstName, lastName, email, ""),
+                        singleRoomsSelected,
+                        doubleRoomsSelected,
+                        suiteRoomsSelected,
+                        deluxeRoomsSelected,
+                        dateFrom,
+                        dateTo
+                )), request);
         return "redirect:/admin-cabinet";
     }
 
     @RequestMapping(value = "reject")
-    public String rejectRequest(@RequestParam(value = "request") Integer requestID) {
+    public String rejectRequest(@RequestParam(value = "request") Integer requestID, HttpServletRequest request) {
 
-        requestOrderServiceFeignClient.rejectRequest(requestID);
+        checkForServiceError(requestOrderServiceFeignClient.rejectRequest(requestID), request);
         return "redirect:/admin-cabinet";
     }
 }

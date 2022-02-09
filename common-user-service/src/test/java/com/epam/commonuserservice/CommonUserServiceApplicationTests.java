@@ -1,8 +1,5 @@
 package com.epam.commonuserservice;
 
-import com.epam.commonuserservice.entity.User;
-import com.epam.commonuserservice.repository.UserRepository;
-import com.epam.commonuserservice.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +20,7 @@ class CommonUserServiceApplicationTests {
     void contextLoads() {
         String passBefore = "Qwer1234!";
         String passCrypt = passwordEncoder.encode(passBefore);
-        System.out.println("passcrypt->"+passCrypt);
-
+        System.out.println("passcrypt->" + passCrypt);
 
 
     }

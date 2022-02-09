@@ -20,7 +20,7 @@ public class JsonFileHandler {
     public HashMap<String, Object> getMapFromJson() throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
- //       return objectMapper.readValue(new FileInputStream(jsonPath), HashMap.class);
+        //       return objectMapper.readValue(new FileInputStream(jsonPath), HashMap.class);
         return objectMapper.readValue(new ClassPathResource(jsonPath).getInputStream(), HashMap.class);
     }
 }

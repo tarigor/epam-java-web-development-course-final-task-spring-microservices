@@ -25,10 +25,10 @@ class MailingServiceApplicationTests {
 //        private String email;
 //        private String userType;
 
-        User user = new User(1L,"Igor","Taren", "palkin@yopmail.com","CLIENT");
+        User user = new User(1L, "Igor", "Taren", "palkin@yopmail.com", "CLIENT");
         int requestID = 1;
         int orderAssigned = 1;
-        EmailToClient emailToClient = new EmailToClient(user,requestID,orderAssigned);
+        EmailToClient emailToClient = new EmailToClient(user, requestID, orderAssigned);
         emailService.sendEmailToClient(emailToClient);
     }
 
